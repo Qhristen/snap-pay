@@ -1,15 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useGetTransactionsQuery } from '@/store/api/transactionApi';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { formatCurrency, cn } from '@/lib/utils';
-import { ArrowDownLeft, ArrowUpRight, Send, Search, Filter, LayoutDashboard } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
+import { TransactionCard } from '@/components/wallet/TransactionCard';
+import { cn } from '@/lib/utils';
+import { useGetTransactionsQuery } from '@/store/api/transactionApi';
 import { TransactionTypeFilter } from '@/types';
+import { LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function TransactionsPage() {
   const [page, setPage] = useState(1);
@@ -17,7 +16,7 @@ export default function TransactionsPage() {
 
   const { data, isLoading } = useGetTransactionsQuery({
     page,
-    limit: 10,
+    limit: 5,
     type: type === TransactionTypeFilter.ALL ? undefined : type,
   });
 
@@ -32,7 +31,7 @@ export default function TransactionsPage() {
           <h1 className="text-3xl font-bold">Transaction History</h1>
           <p className="text-white/40">Keep track of all your financial activities.</p>
         </div>
-        <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+        <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
           <LayoutDashboard size={18} />
         </Link>
       </div>
@@ -61,80 +60,65 @@ export default function TransactionsPage() {
           ) : transactions.length === 0 ? (
             <div className="p-12 text-center text-muted-foreground">No transactions found</div>
           ) : (
-            <div className="divide-y divide-border">
-              {transactions.map((tx: any, index: number) => {
-                const type = tx.type.toLowerCase();
-                const isCredit = type === 'deposit' || type === 'transfer_received' || type === 'credit';
-                const amount = typeof tx.amount === 'string' ? parseFloat(tx.amount) : tx.amount;
-
-                return (
-                  <motion.div
-                    key={tx.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between p-6 transition-hover hover:bg-muted/50"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "flex h-12 w-12 items-center justify-center rounded-full",
-                        isCredit ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
-                      )}>
-                        {(type === 'deposit' || type === 'transfer_received') && <ArrowDownLeft className="h-6 w-6" />}
-                        {(type === 'withdrawal' || type === 'transfer_sent') && <ArrowUpRight className="h-6 w-6" />}
-                        {type === 'transfer' && <Send className="h-6 w-6" />}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-semibold text-white/40 text-sm md:text-md">{tx.description || tx.type.replace('_', ' ')}</p>
-                          <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase">
-                            {tx.status?.toLowerCase() || 'completed'}
-                          </span>
-                        </div>
-                        <p className="text-xs md:text-sm text-white/40">
-                          {new Date(tx.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className={cn(
-                        "text-md md:text-lg font-bold",
-                        isCredit ? "text-green-500" : "text-red-500"
-                      )}>
-                        {isCredit ? '+' : '-'}{formatCurrency(amount)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Ref: {tx.id.slice(0, 8)}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-
+            <div className="divide-y divide-white/5">
+              {transactions.map((tx: any, index: number) => (
+                <TransactionCard key={tx.id} transaction={tx} index={index} />
+              ))}
             </div>
           )}
         </CardContent>
       </Card>
 
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            Previous
-          </Button>
-          <div className="flex items-center px-4 text-sm font-medium">
-            Page {page} of {totalPages}
+        <div className="flex items-center justify-between border-t border-white/5 pt-6">
+          <p className="text-xs text-white/40">
+            Showing page <span className="text-white font-bold">{page}</span> of <span className="text-white font-bold">{totalPages}</span>
+          </p>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              className="h-8 w-8 p-0 border-white/5 bg-white/5 hover:bg-white/10"
+            >
+              <span className="sr-only">Previous</span>
+              &larr;
+            </Button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+              .map((p, i, arr) => (
+                <div key={p} className="flex items-center">
+                  {i > 0 && arr[i-1] !== p - 1 && (
+                    <span className="px-2 text-white/20 text-xs">...</span>
+                  )}
+                  <Button
+                    variant={page === p ? 'primary' : 'outline'}
+                    size="sm"
+                    onClick={() => setPage(p)}
+                    className={cn(
+                      "h-8 w-8 p-0 text-xs font-bold",
+                      page === p ? "" : "border-white/5 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white"
+                    )}
+                  >
+                    {p}
+                  </Button>
+                </div>
+              ))
+            }
+
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+              className="h-8 w-8 p-0 border-white/5 bg-white/5 hover:bg-white/10"
+            >
+              <span className="sr-only">Next</span>
+              &rarr;
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === totalPages}
-            onClick={() => setPage(page + 1)}
-          >
-            Next
-          </Button>
         </div>
       )}
     </div>

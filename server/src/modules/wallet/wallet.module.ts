@@ -9,15 +9,18 @@ import { UsersModule } from '../users/users.module';
 import { GatewayModule } from '../gateway/gateway.module';
 import { AuditModule } from '../audit/audit.module';
 import { TransactionsModule } from '../transactions/transactions.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Wallet, BankAccount]),
     BullModule.registerQueue({ name: 'withdrawal-processing' }),
+    BullModule.registerQueue({ name: 'wallet-updates' }),
     forwardRef(() => UsersModule),
     GatewayModule,
     AuditModule,
     TransactionsModule,
+    NotificationsModule,
   ],
   providers: [WalletService],
   controllers: [WalletController],

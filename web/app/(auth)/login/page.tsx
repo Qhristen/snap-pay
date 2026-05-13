@@ -45,69 +45,106 @@ export default function LoginPage() {
 
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
-      {/* Background Glows */}
-      <div className="absolute top-0 left-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 bg-primary/10 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 h-[500px] w-[500px] translate-x-1/2 translate-y-1/2 bg-primary/10 blur-[120px]" />
+    <div className="flex min-h-screen bg-background overflow-hidden">
+      {/* Left Side: Hero Section */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden flex-col justify-between p-36">
+        {/* Background Mesh/Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#D4AF3715_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,#7C3AED10_0%,transparent_50%)]" />
+        
+        <Link href="/" className="relative z-10 flex items-center gap-2 group max-w-fit">
+          <Zap className="h-10 w-10 text-primary fill-primary group-hover:scale-110 transition-transform" />
+          <span className="font-sora text-3xl font-extrabold tracking-tighter text-white">SnapPay</span>
+        </Link>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="z-10 w-full max-w-md"
-      >
-        <div className="mb-10 flex flex-col items-center">
-          <Link href="/" className="group mb-8 flex items-center gap-2 transition-transform hover:scale-105">
-            <Zap className="h-10 w-10 text-primary fill-primary" />
-            <span className="font-sora text-3xl font-extrabold tracking-tighter text-white">SnapPay</span>
-          </Link>
-          <h1 className="font-sora text-2xl font-bold text-white">Welcome Back</h1>
-          <p className="mt-2 text-sm font-medium text-muted-foreground">Secure access to your digital wallet</p>
+        <div className="relative z-10 space-y-6">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl font-sora font-extrabold text-white leading-tight max-w-xl"
+          >
+            The Future of <span className="text-primary italic">Digital Banking</span> is Here.
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-white/40 max-w-md"
+          >
+            Experience seamless transactions, instant notifications, and premium security designed for the modern world.
+          </motion.p>
         </div>
 
-        <div className="border border-white/5 bg-surface p-8 shadow-2xl md:p-10">
+  
+      </div>
+
+      {/* Right Side: Login Form */}
+      <div className="flex-1 flex flex-col justify-center p-6 md:p-12 lg:p-24 relative overflow-y-auto">
+        <div className="lg:hidden absolute top-12 left-12">
+            <Link href="/" className="flex items-center gap-2">
+                <Zap className="h-8 w-8 text-primary fill-primary" />
+                <span className="font-sora text-2xl font-extrabold text-white">SnapPay</span>
+            </Link>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="w-full max-w-md mx-auto"
+        >
+          <div className="mb-10">
+            <h1 className="font-sora text-4xl font-bold text-white tracking-tight">Welcome Back</h1>
+            <p className="mt-4 text-white/40 font-medium">Please enter your details to access your account.</p>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
+            <div className="space-y-4">
               <Input
                 label="Email Address"
                 placeholder="name@example.com"
                 error={errors.email?.message}
-                className="bg-background/50 border-white/5 h-12"
+                className="h-14 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-lg"
                 {...register('email')}
               />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Password</label>
-                <Link href="#" className="text-[10px] font-bold text-primary hover:underline uppercase tracking-tighter">Forgot Password?</Link>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Password</label>
+                  <Link href="#" className="text-xs font-bold text-primary hover:text-gold-glow transition-colors">Forgot Password?</Link>
+                </div>
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  error={errors.password?.message}
+                  className="h-14 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-lg"
+                  {...register('password')}
+                />
               </div>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                error={errors.password?.message}
-                className="bg-background/50 border-white/5 h-12"
-                {...register('password')}
-              />
             </div>
-            <Button type="submit" className="h-14 w-full bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
+
+            <Button 
+              type="submit" 
+              className="h-16 w-full bg-primary text-xl font-bold text-background hover:bg-gold-glow transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
+              isLoading={isLoading}
+            >
               Sign In
             </Button>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-sm font-medium text-muted-foreground">
-              Don't have an account?{' '}
-              <Link href="/register" className="font-bold text-primary hover:text-gold-glow transition-colors">
-                Create Account
+          <div className="mt-10 text-center">
+            <p className="text-white/40 font-medium">
+              New to SnapPay?{' '}
+              <Link href="/register" className="text-white font-bold hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">
+                Create an account
               </Link>
             </p>
           </div>
-        </div>
 
-        <Link href="/" className="mt-8 flex items-center justify-center gap-2 text-sm font-bold text-muted-foreground hover:text-white transition-colors uppercase tracking-widest">
-           <ChevronLeft size={16} /> Back to Home
-        </Link>
-      </motion.div>
+          <Link href="/" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-white/20 hover:text-white/60 transition-colors uppercase tracking-[0.2em]">
+             <ChevronLeft size={14} /> Return to Home
+          </Link>
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -41,4 +41,15 @@ export class UsersController {
   ) {
     return this.usersService.search(dto.query, dto.limit, user.id);
   }
+
+  @Get('by-email')
+  @ApiOperation({
+    summary: 'Get user by email',
+    description: 'Find a user by their exact email address.',
+  })
+  @ApiOkResponse({ description: 'User found', type: User })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid access token' })
+  async getUserByEmail(@Query('email') email: string) {
+    return this.usersService.findByEmail(email);
+  }
 }

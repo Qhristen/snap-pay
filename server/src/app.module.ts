@@ -19,6 +19,7 @@ import { QueuesModule } from './modules/queues/queues.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { PaymentModule } from './modules/payment/payment.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { PaymentModule } from './modules/payment/payment.module';
     GatewayModule,
     QueuesModule,
     PaymentModule,
+    NotificationsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

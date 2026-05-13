@@ -17,6 +17,8 @@ import { User } from '../users/entities/user.entity';
 import { WalletGatewayService } from '../gateway/wallet-gateway.service';
 import { AuditService } from '../audit/audit.service';
 import { UsersService } from '../users/users.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '../notifications/entities/notification.entity';
 
 @Injectable()
 export class WalletService {
@@ -25,7 +27,9 @@ export class WalletService {
     private readonly gatewayService: WalletGatewayService,
     private readonly auditService: AuditService,
     private readonly usersService: UsersService,
+    private readonly notificationsService: NotificationsService,
     @InjectQueue('withdrawal-processing') private readonly withdrawalQueue: Queue,
+    @InjectQueue('wallet-updates') private readonly walletUpdatesQueue: Queue,
   ) {}
 
   private generateReference(prefix: string = 'TXN'): string {
@@ -64,7 +68,19 @@ export class WalletService {
       await queryRunner.commitTransaction();
 
       const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      this.gatewayService.emitBalanceUpdate(user.id, balanceNaira, wallet.currency);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId: user.id,
+        balance: balanceNaira,
+        currency: wallet.currency,
+      });
+      
+      await this.notificationsService.create(
+        user.id,
+        'Wallet Credited',
+        `Successfully deposited ${wallet.currency} ${parseFloat(new Decimal(amountKobo).dividedBy(100).toFixed(2))} to your wallet.`,
+        NotificationType.TRANSACTION,
+      );
+
       await this.auditService.log(user, 'DEPOSIT', 'Wallet', wallet.id, { balance: balanceNaira });
 
       return {
@@ -124,7 +140,19 @@ export class WalletService {
       });
 
       const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      this.gatewayService.emitBalanceUpdate(user.id, balanceNaira, wallet.currency);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId: user.id,
+        balance: balanceNaira,
+        currency: wallet.currency,
+      });
+      
+      await this.notificationsService.create(
+        user.id,
+        'Withdrawal Initiated',
+        `Withdrawal of ${wallet.currency} ${dto.amount} has been initiated and is pending processing.`,
+        NotificationType.TRANSACTION,
+      );
+
       await this.auditService.log(user, 'WITHDRAWAL_INITIATED', 'Wallet', wallet.id, { balance: balanceNaira });
 
       return {
@@ -157,23 +185,6 @@ export class WalletService {
     await queryRunner.startTransaction();
 
     try {
-      const existingTx = await queryRunner.manager.findOne(Transaction, {
-        where: { userId: user.id },
-      });
-
-      if (existingTx) {
-        await queryRunner.commitTransaction();
-        const wallet = await this.dataSource.getRepository(Wallet).findOneBy({ userId: user.id });
-        return {
-          transaction: {
-            id: existingTx.id,
-            amount: new Decimal(existingTx.amount).dividedBy(100).toFixed(2),
-            createdAt: existingTx.createdAt,
-          },
-          senderBalance: new Decimal(wallet?.balance || 0).dividedBy(100).toFixed(2),
-        };
-      }
-
       const [firstUserId, secondUserId] = user.id < recipient.id 
         ? [user.id, recipient.id] 
         : [recipient.id, user.id];
@@ -209,7 +220,7 @@ export class WalletService {
         amount: amountKobo.toNumber(),
         description: "Transfer to " + recipient.username,
         status: TransactionStatus.SUCCESSFUL,
-        type: TransactionType.TRANSFER,
+        type: TransactionType.TRANSFER_SENT,
       });
 
       const receiverTx = queryRunner.manager.create(Transaction, {
@@ -218,7 +229,7 @@ export class WalletService {
         amount: amountKobo.toNumber(),
         description: "Received from " + user.username,
         status: TransactionStatus.SUCCESSFUL,
-        type: TransactionType.TRANSFER,
+        type: TransactionType.TRANSFER_RECEIVED,
       });
 
       await queryRunner.manager.save(senderTx);
@@ -230,9 +241,40 @@ export class WalletService {
       const receiverBalanceNaira = new Decimal(receiverWallet.balance).dividedBy(100).toFixed(2);
       const amountNaira = amountKobo.dividedBy(100).toFixed(2);
 
-      this.gatewayService.emitBalanceUpdate(user.id, senderBalanceNaira, senderWallet.currency);
-      this.gatewayService.emitBalanceUpdate(recipient.id, receiverBalanceNaira, receiverWallet.currency);
-      this.gatewayService.emitTransferNotification(recipient.id, user.username, amountNaira, senderTx.id);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId: user.id,
+        balance: senderBalanceNaira,
+        currency: senderWallet.currency,
+      });
+
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId: recipient.id,
+        balance: receiverBalanceNaira,
+        currency: receiverWallet.currency,
+      });
+
+      await this.walletUpdatesQueue.add('transfer-notification', {
+        userId: recipient.id,
+        fromUsername: user.username,
+        amount: amountNaira,
+        transactionId: senderTx.id,
+      });
+      
+      // Notify sender
+      await this.notificationsService.create(
+        user.id,
+        'Transfer Sent',
+        `Successfully transferred ${senderWallet.currency} ${amountNaira} to ${recipient.username}.`,
+        NotificationType.TRANSACTION,
+      );
+
+      // Notify recipient
+      await this.notificationsService.create(
+        recipient.id,
+        'Transfer Received',
+        `You received ${receiverWallet.currency} ${amountNaira} from ${user.username}.`,
+        NotificationType.TRANSACTION,
+      );
 
       await this.auditService.log(user, 'TRANSFER_SENT', 'Wallet', senderWallet.id, { balance: senderBalanceNaira });
       await this.auditService.log(recipient, 'TRANSFER_RECEIVED', 'Wallet', receiverWallet.id, { balance: receiverBalanceNaira });
@@ -382,7 +424,11 @@ export class WalletService {
       await queryRunner.commitTransaction();
 
       const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      this.gatewayService.emitBalanceUpdate(userId, balanceNaira, wallet.currency);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId,
+        balance: balanceNaira,
+        currency: wallet.currency,
+      });
       
       return transaction;
     } catch (err) {
@@ -433,7 +479,11 @@ export class WalletService {
       await queryRunner.commitTransaction();
 
       const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      this.gatewayService.emitBalanceUpdate(userId, balanceNaira, wallet.currency);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId,
+        balance: balanceNaira,
+        currency: wallet.currency,
+      });
       
       return transaction;
     } catch (err) {
@@ -484,7 +534,11 @@ export class WalletService {
       await queryRunner.commitTransaction();
 
       const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      this.gatewayService.emitBalanceUpdate(transaction.userId, balanceNaira, wallet.currency);
+      await this.walletUpdatesQueue.add('balance-update', {
+        userId: transaction.userId,
+        balance: balanceNaira,
+        currency: wallet.currency,
+      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;

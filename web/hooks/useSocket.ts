@@ -22,18 +22,30 @@ export function useSocket() {
     const socket = socketService.getSocket();
 
     if (socket) {
-      socket.on('balance_updated', (newBalance: number) => {
-        console.log(newBalance, 'new balance');
-        dispatch(setBalance(newBalance));
+      socket.on('balance:updated', (payload: { balance: string; currency: string }) => {
+        console.log('Balance update received:', payload);
+        dispatch(setBalance(parseFloat(payload.balance)));
+        // Refresh transactions and wallet data
+        dispatch({ type: 'api/invalidateTags', payload: ['Wallet', 'Transactions'] });
       });
 
-      socket.on('transfer_received', ({ amount, from }: { amount: number; from: string }) => {
-        console.log(amount, from, 'transfer received');
-        toast.success(`You received ${formatCurrency(amount)} from ${from}`);
+      socket.on('transfer:received', ({ amount, from }: { amount: string; from: string }) => {
+        console.log('Transfer received:', { amount, from });
+        toast.success(`You received ${formatCurrency(parseFloat(amount))} from ${from}`);
+        // Refresh transactions
+        dispatch({ type: 'api/invalidateTags', payload: ['Transactions'] });
       });
 
-      socket.on('transaction_created', () => {
-        console.log('transaction created');
+      socket.on('notification:received', (notification: any) => {
+        console.log('Notification received:', notification);
+        toast.info(notification.title, {
+          description: notification.message,
+        });
+        // Invalidate notifications to refresh count and list
+        dispatch({
+          type: 'api/invalidateTags',
+          payload: ['Notifications'],
+        });
       });
     }
 

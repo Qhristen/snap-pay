@@ -36,7 +36,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center">
           {/* Backdrop */}
           <motion.div
             ref={overlayRef}

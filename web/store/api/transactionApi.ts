@@ -42,16 +42,15 @@ export const transactionApi = api.injectEndpoints({
         params: params || {},
       }),
       transformResponse: (response: any): PaginatedTransactions => {
-        // Handle wrapped { data: { data: [], meta: {} } } and flat { data: [], meta: {} }
         const payload = response?.data ?? response;
         return {
-          data: Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [],
-          meta: payload?.meta ?? {
-            totalItems: 0,
-            itemCount: 0,
-            itemsPerPage: 10,
-            totalPages: 1,
-            currentPage: 1,
+          data: payload?.data ?? (Array.isArray(payload) ? payload : []),
+          meta: {
+            totalItems: payload?.total ?? 0,
+            itemCount: payload?.data?.length ?? 0,
+            itemsPerPage: payload?.limit ?? 10,
+            totalPages: payload?.totalPages ?? 1,
+            currentPage: payload?.page ?? 1,
           },
         };
       },

@@ -12,8 +12,13 @@ export const userApi = api.injectEndpoints({
       },
       providesTags: ["User"],
     }),
+    getUserByEmail: builder.query<User, string>({
+      query: (email) => `/api/v1/users/by-email?email=${email}`,
+      transformResponse: (response: any) => response?.data ?? response,
+      providesTags: ["User"],
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useLazySearchUserQuery } = userApi;
+export const { useLazySearchUserQuery, useLazyGetUserByEmailQuery } = userApi;

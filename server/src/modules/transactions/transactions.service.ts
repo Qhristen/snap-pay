@@ -21,7 +21,17 @@ export class TransactionsService {
       .where('t.userId = :userId', { userId: user.id });
 
     if (type && type !== TransactionTypeFilter.ALL) {
-      queryBuilder.andWhere('t.type = :type', { type });
+      if (type === TransactionTypeFilter.TRANSFER) {
+        queryBuilder.andWhere('t.type IN (:...types)', { 
+          types: [
+            TransactionTypeFilter.TRANSFER, 
+            TransactionTypeFilter.TRANSFER_SENT, 
+            TransactionTypeFilter.TRANSFER_RECEIVED
+          ] 
+        });
+      } else {
+        queryBuilder.andWhere('t.type = :type', { type });
+      }
     }
 
     if (status) {

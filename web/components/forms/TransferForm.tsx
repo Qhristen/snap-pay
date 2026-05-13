@@ -8,7 +8,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { decrementBalance } from '@/store/slices/walletSlice';
 import { useTransferMutation } from '@/store/api/walletApi';
-import { useLazySearchUserQuery } from '@/store/api/userApi';
+import { useLazyGetUserByEmailQuery } from '@/store/api/userApi';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User as UserIcon, ArrowRight } from 'lucide-react';
 
 const transferSchema = z.object({
-  recipientEmail: z.email('Invalid email address'),
+  recipientEmail: z.string().email('Invalid email address'),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Amount must be a positive number',
   }),
@@ -37,7 +37,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
   const [step, setStep] = useState(1);
   const [recipientName, setRecipientName] = useState<string | null>(null);
 
-  const [searchUser, { isFetching: isSearching }] = useLazySearchUserQuery();
+  const [getUserByEmail, { isFetching: isSearching }] = useLazyGetUserByEmailQuery();
   const [transfer, { isLoading }] = useTransferMutation();
 
   const {
@@ -59,7 +59,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
     if (!isValid) return;
 
     try {
-      const result = await searchUser({ query: recipientEmail }).unwrap();
+      const result = await getUserByEmail(recipientEmail).unwrap();
       if (result) {
         setRecipientName(result.fullName);
         setStep(2);
@@ -144,7 +144,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-            <div className="flex items-center gap-3 rounded-2xl bg-primary/10 border border-primary/20 p-4">
+            <div className="flex items-center gap-3 bg-primary/10 border border-primary/20 p-4">
               <div className="h-10 w-10 bg-primary flex items-center justify-center text-background">
                 <UserIcon className="h-5 w-5" />
               </div>

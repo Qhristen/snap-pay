@@ -14,6 +14,8 @@ import { ArrowDownLeft, ArrowUpRight, Send, History, Search, Filter, ChevronRigh
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useLogoutMutation } from '@/store/api/authApi';
+import { NotificationBell } from '@/components/layout/NotificationBell';
+import { TransactionCard } from '@/components/wallet/TransactionCard';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
@@ -57,10 +59,11 @@ export default function DashboardPage() {
           <p className="text-white/40 text-sm font-medium">Your financial overview at a glance.</p>
         </div>
         <div className="flex items-center gap-3">
-           <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
-              <LayoutDashboard size={18} />
-           </Link>
-           <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
+            <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
+               <LayoutDashboard size={18} />
+            </Link>
+            <NotificationBell />
+           <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
               <LogOut size={18} />
            </button>
         </div>
@@ -113,53 +116,9 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="divide-y divide-white/5">
-                {transactionsData?.map((tx: any, index: number) => {
-                  const type = tx.type.toLowerCase();
-                  const isCredit = type === 'deposit' || type === 'transfer_received' || type === 'credit';
-                  const amount = typeof tx.amount === 'string' ? parseFloat(tx.amount) : tx.amount;
-
-                  return (
-                    <motion.div
-                      key={tx.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex items-center justify-between p-6 transition-all hover:bg-white/[0.02] group"
-                    >
-                      <div className="flex items-center gap-5">
-                        <div className={cn(
-                          "flex h-12 w-12 items-center justify-center border border-white/5 transition-transform group-hover:scale-110",
-                          isCredit ? "bg-success/10 text-success" : "bg-white/5 text-white"
-                        )}>
-                          {(type === 'deposit' || type === 'transfer_received') && <ArrowDownLeft className="h-6 w-6" />}
-                          {(type === 'withdrawal' || type === 'transfer_sent') && <ArrowUpRight className="h-6 w-6" />}
-                          {type === 'transfer' && <Send className="h-6 w-6" />}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold tracking-tight text-white">{tx.description || tx.type.replace('_', ' ')}</p>
-                          <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">
-                            {new Date(tx.createdAt).toLocaleDateString(undefined, {
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className={cn(
-                          "text-base font-mono font-bold tracking-tighter",
-                          isCredit ? "text-success" : "text-white"
-                        )}>
-                          {isCredit ? '+' : '-'}{formatCurrency(amount)}
-                        </p>
-                        <div className="h-1 w-4 bg-white/5 rounded-full ml-auto mt-2" />
-                      </div>
-                    </motion.div>
-                  );
-                })}
-
+                {transactionsData?.map((tx: any, index: number) => (
+                  <TransactionCard key={tx.id} transaction={tx} index={index} />
+                ))}
               </div>
             )}
           </div>
