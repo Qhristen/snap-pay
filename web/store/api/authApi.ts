@@ -123,7 +123,6 @@ export const authApi = api.injectEndpoints({
       query: () => ({
         url: "/api/v1/auth/logout",
         method: "POST",
-        data: { refreshToken: typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null },
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transaction } from '../entities/transaction.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Transaction } from "../entities/transaction.entity";
 
 export class TransactionPaginationResponseDto {
   @ApiProperty({ type: [Transaction] })

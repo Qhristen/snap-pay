@@ -1,24 +1,24 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import { DataSource } from 'typeorm';
-import { UnauthorizedException, ConflictException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthService } from "./auth.service";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "@nestjs/jwt";
+import { DataSource } from "typeorm";
+import { UnauthorizedException, ConflictException } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 
-jest.mock('bcrypt');
+jest.mock("bcrypt");
 
-describe('AuthService', () => {
+describe("AuthService", () => {
   let service: AuthService;
   let usersService: UsersService;
   let jwtService: JwtService;
   let dataSource: DataSource;
 
   const mockUser = {
-    id: 'uuid-1',
-    email: 'test@example.com',
-    username: 'testuser',
-    passwordHash: 'hashedPassword',
+    id: "uuid-1",
+    email: "test@example.com",
+    username: "testuser",
+    passwordHash: "hashedPassword",
   };
 
   const mockUsersService = {
@@ -28,7 +28,7 @@ describe('AuthService', () => {
   };
 
   const mockJwtService = {
-    sign: jest.fn().mockReturnValue('token'),
+    sign: jest.fn().mockReturnValue("token"),
   };
 
   const mockQueryRunner = {
@@ -64,44 +64,52 @@ describe('AuthService', () => {
     dataSource = module.get<DataSource>(DataSource);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 
-  describe('register', () => {
-    it('should register a new user and return user info with token', async () => {
-      const dto = { email: 'test@example.com', username: 'testuser', password: 'Password123!' };
+  describe("register", () => {
+    it("should register a new user and return user info with token", async () => {
+      const dto = {
+        email: "test@example.com",
+        username: "testuser",
+        password: "Password123!",
+      };
       mockUsersService.findByEmail.mockResolvedValue(null);
       mockUsersService.findByUsername.mockResolvedValue(null);
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashedPassword");
       mockQueryRunner.manager.save.mockResolvedValueOnce(mockUser); // save user
       mockQueryRunner.manager.save.mockResolvedValueOnce({}); // save wallet
 
       const result = await service.register(dto);
 
       expect(result.user.email).toBe(dto.email);
-      expect(result.accessToken).toBe('token');
+      expect(result.accessToken).toBe("token");
       expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
     });
   });
 
-  describe('login', () => {
-    it('should return user info and token for valid credentials', async () => {
+  describe("login", () => {
+    it("should return user info and token for valid credentials", async () => {
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const result = await service.login({ email: 'test@example.com', password: 'Password123!' });
+      const result = await service.login({
+        email: "test@example.com",
+        password: "Password123!",
+      });
 
       expect(result.user.email).toBe(mockUser.email);
-      expect(result.accessToken).toBe('token');
+      expect(result.accessToken).toBe("token");
     });
 
-    it('should throw UnauthorizedException for wrong password', async () => {
+    it("should throw UnauthorizedException for wrong password", async () => {
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login({ email: 'test@example.com', password: 'wrong' }))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login({ email: "test@example.com", password: "wrong" }),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

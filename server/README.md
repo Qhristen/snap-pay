@@ -43,7 +43,13 @@ The robust, scalable backend for SnapPay, built with NestJS. It handles core fin
    cp .env.example .env
    ```
 
-3. Run the application:
+3. Run database migrations:
+   Apply the latest schema changes to your PostgreSQL database:
+   ```bash
+   npm run migration:run
+   ```
+
+4. Run the application:
    ```bash
    # Development mode
    npm run start:dev
@@ -52,6 +58,19 @@ The robust, scalable backend for SnapPay, built with NestJS. It handles core fin
    npm run build
    npm run start:prod
    ```
+
+### 🗄️ Database Migrations (Advanced)
+
+If you modify the database entities, you can manage schema changes using the built-in TypeORM scripts:
+
+- **Generate a new migration:**
+  ```bash
+  npm run migration:generate -- src/database/migrations/MigrationName
+  ```
+- **Revert the last migration:**
+  ```bash
+  npm run migration:revert
+  ```
 
 ### 📚 API Documentation
 

@@ -5,9 +5,9 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-} from '@nestjs/common';
-import { Response, Request } from 'express';
-import { QueryFailedError } from 'typeorm';
+} from "@nestjs/common";
+import { Response, Request } from "express";
+import { QueryFailedError } from "typeorm";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string | string[] = 'Internal server error';
+    let message: string | string[] = "Internal server error";
 
     if (exception instanceof HttpException) {
       statusCode = exception.getStatus();
@@ -28,11 +28,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof QueryFailedError) {
       statusCode = HttpStatus.BAD_REQUEST;
       const detail = (exception as any).detail;
-      if (detail && detail.includes('already exists')) {
+      if (detail && detail.includes("already exists")) {
         statusCode = HttpStatus.CONFLICT;
-        message = detail.replace('Key ', '').replace(/[()]/g, '');
+        message = detail.replace("Key ", "").replace(/[()]/g, "");
       } else {
-        message = 'Database operation failed';
+        message = "Database operation failed";
       }
     }
 

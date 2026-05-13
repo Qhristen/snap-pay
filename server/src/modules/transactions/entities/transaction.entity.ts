@@ -1,22 +1,22 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Index,
-  PrimaryGeneratedColumn
-} from 'typeorm';
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import {
   TransactionStatus,
   TransactionType,
-} from '../../../common/enums/transaction.enum';
+} from "../../../common/enums/transaction.enum";
 
-@Entity('transactions')
-@Index(['reference'], { unique: true })
+@Entity("transactions")
+@Index(["reference"], { unique: true })
 export class Transaction {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @ApiProperty()
@@ -29,13 +29,15 @@ export class Transaction {
 
   @ApiProperty()
   @Column({
-    type: 'bigint',
+    type: "bigint",
     transformer: {
       to: (value: number) => value.toString(),
       from: (value: string) => parseInt(value, 10),
     },
   })
-  @Transform(({ value }) => parseFloat((value / 100).toFixed(2)), { toPlainOnly: true })
+  @Transform(({ value }) => parseFloat((value / 100).toFixed(2)), {
+    toPlainOnly: true,
+  })
   amount: number;
 
   @ApiProperty()
@@ -44,14 +46,14 @@ export class Transaction {
 
   @ApiProperty({ enum: TransactionStatus })
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: TransactionStatus,
     default: TransactionStatus.PENDING,
   })
   status: TransactionStatus;
 
   @ApiProperty({ required: false })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: "jsonb", nullable: true })
   metadata: any;
 
   @ApiProperty()
@@ -60,7 +62,7 @@ export class Transaction {
 
   @ApiProperty({ enum: TransactionType })
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: TransactionType,
   })
   type: TransactionType;

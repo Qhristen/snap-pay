@@ -2,23 +2,26 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { DataSource } from 'typeorm';
-import * as crypto from 'crypto';
-import Decimal from 'decimal.js';
-import { Wallet } from './entities/wallet.entity';
-import { BankAccount } from './entities/bank-account.entity';
-import { Transaction } from '../transactions/entities/transaction.entity';
-import { TransactionStatus, TransactionType } from '../../common/enums/transaction.enum';
-import { DepositDto, WithdrawDto, TransferDto } from './dto/wallet.dto';
-import { User } from '../users/entities/user.entity';
-import { WalletGatewayService } from '../gateway/wallet-gateway.service';
-import { AuditService } from '../audit/audit.service';
-import { UsersService } from '../users/users.service';
-import { NotificationsService } from '../notifications/notifications.service';
-import { NotificationType } from '../notifications/entities/notification.entity';
+} from "@nestjs/common";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
+import { DataSource } from "typeorm";
+import * as crypto from "crypto";
+import Decimal from "decimal.js";
+import { Wallet } from "./entities/wallet.entity";
+import { BankAccount } from "./entities/bank-account.entity";
+import { Transaction } from "../transactions/entities/transaction.entity";
+import {
+  TransactionStatus,
+  TransactionType,
+} from "../../common/enums/transaction.enum";
+import { DepositDto, WithdrawDto, TransferDto } from "./dto/wallet.dto";
+import { User } from "../users/entities/user.entity";
+import { WalletGatewayService } from "../gateway/wallet-gateway.service";
+import { AuditService } from "../audit/audit.service";
+import { UsersService } from "../users/users.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { NotificationType } from "../notifications/entities/notification.entity";
 
 @Injectable()
 export class WalletService {
@@ -28,13 +31,14 @@ export class WalletService {
     private readonly auditService: AuditService,
     private readonly usersService: UsersService,
     private readonly notificationsService: NotificationsService,
-    @InjectQueue('withdrawal-processing') private readonly withdrawalQueue: Queue,
-    @InjectQueue('wallet-updates') private readonly walletUpdatesQueue: Queue,
+    @InjectQueue("withdrawal-processing")
+    private readonly withdrawalQueue: Queue,
+    @InjectQueue("wallet-updates") private readonly walletUpdatesQueue: Queue,
   ) {}
 
-  private generateReference(prefix: string = 'TXN'): string {
+  private generateReference(prefix: string = "TXN"): string {
     const timestamp = Date.now().toString(36);
-    const random = crypto.randomBytes(4).toString('hex');
+    const random = crypto.randomBytes(4).toString("hex");
     return `${prefix}_${timestamp}_${random}`.toUpperCase();
   }
 
@@ -46,10 +50,10 @@ export class WalletService {
     try {
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId: user.id },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!wallet) throw new NotFoundException('Wallet not found');
+      if (!wallet) throw new NotFoundException("Wallet not found");
 
       const amountKobo = new Decimal(dto.amount).times(100);
       wallet.balance = new Decimal(wallet.balance).plus(amountKobo).toNumber();
@@ -57,7 +61,7 @@ export class WalletService {
 
       const transaction = queryRunner.manager.create(Transaction, {
         userId: user.id,
-              reference: this.generateReference('DEP'),
+        reference: this.generateReference("DEP"),
         amount: amountKobo.toNumber(),
         description: "Deposit to wallet",
         status: TransactionStatus.SUCCESSFUL,
@@ -67,27 +71,33 @@ export class WalletService {
 
       await queryRunner.commitTransaction();
 
-      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      await this.walletUpdatesQueue.add('balance-update', {
+      const balanceNaira = new Decimal(wallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      await this.walletUpdatesQueue.add("balance-update", {
         userId: user.id,
         balance: balanceNaira,
         currency: wallet.currency,
       });
-      
+
       await this.notificationsService.create(
         user.id,
-        'Wallet Credited',
+        "Wallet Credited",
         `Successfully deposited ${wallet.currency} ${parseFloat(new Decimal(amountKobo).dividedBy(100).toFixed(2))} to your wallet.`,
         NotificationType.TRANSACTION,
       );
 
-      await this.auditService.log(user, 'DEPOSIT', 'Wallet', wallet.id, { balance: balanceNaira });
+      await this.auditService.log(user, "DEPOSIT", "Wallet", wallet.id, {
+        balance: balanceNaira,
+      });
 
       return {
         balance: parseFloat(balanceNaira),
         transaction: {
           id: transaction.id,
-          amount: parseFloat(new Decimal(transaction.amount).dividedBy(100).toFixed(2)),
+          amount: parseFloat(
+            new Decimal(transaction.amount).dividedBy(100).toFixed(2),
+          ),
           createdAt: transaction.createdAt,
         },
       };
@@ -107,14 +117,14 @@ export class WalletService {
     try {
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId: user.id },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!wallet) throw new NotFoundException('Wallet not found');
+      if (!wallet) throw new NotFoundException("Wallet not found");
 
       const amountKobo = new Decimal(dto.amount).times(100);
       if (new Decimal(wallet.balance).lessThan(amountKobo)) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException("Insufficient balance");
       }
 
       wallet.balance = new Decimal(wallet.balance).minus(amountKobo).toNumber();
@@ -122,7 +132,7 @@ export class WalletService {
 
       const transaction = queryRunner.manager.create(Transaction, {
         userId: user.id,
-        reference: this.generateReference('WTH'),
+        reference: this.generateReference("WTH"),
         amount: amountKobo.toNumber(),
         description: "Withdrawal from wallet",
         status: TransactionStatus.PENDING,
@@ -133,34 +143,44 @@ export class WalletService {
       await queryRunner.commitTransaction();
 
       // Push to withdrawal queue for background processing
-      await this.withdrawalQueue.add('process-withdrawal', {
+      await this.withdrawalQueue.add("process-withdrawal", {
         withdrawalId: transaction.id,
         userId: user.id,
         amount: amountKobo.toNumber(),
       });
 
-      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      await this.walletUpdatesQueue.add('balance-update', {
+      const balanceNaira = new Decimal(wallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      await this.walletUpdatesQueue.add("balance-update", {
         userId: user.id,
         balance: balanceNaira,
         currency: wallet.currency,
       });
-      
+
       await this.notificationsService.create(
         user.id,
-        'Withdrawal Initiated',
+        "Withdrawal Initiated",
         `Withdrawal of ${wallet.currency} ${dto.amount} has been initiated and is pending processing.`,
         NotificationType.TRANSACTION,
       );
 
-      await this.auditService.log(user, 'WITHDRAWAL_INITIATED', 'Wallet', wallet.id, { balance: balanceNaira });
+      await this.auditService.log(
+        user,
+        "WITHDRAWAL_INITIATED",
+        "Wallet",
+        wallet.id,
+        { balance: balanceNaira },
+      );
 
       return {
         balance: parseFloat(balanceNaira),
         transaction: {
           id: transaction.id,
           status: transaction.status,
-          amount: parseFloat(new Decimal(transaction.amount).dividedBy(100).toFixed(2)),
+          amount: parseFloat(
+            new Decimal(transaction.amount).dividedBy(100).toFixed(2),
+          ),
           createdAt: transaction.createdAt,
         },
       };
@@ -174,49 +194,56 @@ export class WalletService {
 
   async transfer(user: User, dto: TransferDto) {
     if (user.email === dto.email) {
-      throw new BadRequestException('Cannot transfer to yourself');
+      throw new BadRequestException("Cannot transfer to yourself");
     }
 
     const recipient = await this.usersService.findByEmail(dto.email);
-    if (!recipient) throw new NotFoundException('Recipient not found');
+    if (!recipient) throw new NotFoundException("Recipient not found");
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const [firstUserId, secondUserId] = user.id < recipient.id 
-        ? [user.id, recipient.id] 
-        : [recipient.id, user.id];
+      const [firstUserId, secondUserId] =
+        user.id < recipient.id
+          ? [user.id, recipient.id]
+          : [recipient.id, user.id];
 
       const firstWallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId: firstUserId },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
       const secondWallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId: secondUserId },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!firstWallet || !secondWallet) throw new NotFoundException('Wallet not found');
+      if (!firstWallet || !secondWallet)
+        throw new NotFoundException("Wallet not found");
 
       const senderWallet = firstUserId === user.id ? firstWallet : secondWallet;
-      const receiverWallet = firstUserId === user.id ? secondWallet : firstWallet;
+      const receiverWallet =
+        firstUserId === user.id ? secondWallet : firstWallet;
 
       const amountKobo = new Decimal(dto.amount).times(100);
       if (new Decimal(senderWallet.balance).lessThan(amountKobo)) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException("Insufficient balance");
       }
 
-      senderWallet.balance = new Decimal(senderWallet.balance).minus(amountKobo).toNumber();
-      receiverWallet.balance = new Decimal(receiverWallet.balance).plus(amountKobo).toNumber();
+      senderWallet.balance = new Decimal(senderWallet.balance)
+        .minus(amountKobo)
+        .toNumber();
+      receiverWallet.balance = new Decimal(receiverWallet.balance)
+        .plus(amountKobo)
+        .toNumber();
 
       await queryRunner.manager.save(senderWallet);
       await queryRunner.manager.save(receiverWallet);
 
       const senderTx = queryRunner.manager.create(Transaction, {
         userId: user.id,
-        reference: this.generateReference('TRF_S'),
+        reference: this.generateReference("TRF_S"),
         amount: amountKobo.toNumber(),
         description: "Transfer to " + recipient.username,
         status: TransactionStatus.SUCCESSFUL,
@@ -225,7 +252,7 @@ export class WalletService {
 
       const receiverTx = queryRunner.manager.create(Transaction, {
         userId: recipient.id,
-        reference: this.generateReference('TRF_R'),
+        reference: this.generateReference("TRF_R"),
         amount: amountKobo.toNumber(),
         description: "Received from " + user.username,
         status: TransactionStatus.SUCCESSFUL,
@@ -237,33 +264,37 @@ export class WalletService {
 
       await queryRunner.commitTransaction();
 
-      const senderBalanceNaira = new Decimal(senderWallet.balance).dividedBy(100).toFixed(2);
-      const receiverBalanceNaira = new Decimal(receiverWallet.balance).dividedBy(100).toFixed(2);
+      const senderBalanceNaira = new Decimal(senderWallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      const receiverBalanceNaira = new Decimal(receiverWallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
       const amountNaira = amountKobo.dividedBy(100).toFixed(2);
 
-      await this.walletUpdatesQueue.add('balance-update', {
+      await this.walletUpdatesQueue.add("balance-update", {
         userId: user.id,
         balance: senderBalanceNaira,
         currency: senderWallet.currency,
       });
 
-      await this.walletUpdatesQueue.add('balance-update', {
+      await this.walletUpdatesQueue.add("balance-update", {
         userId: recipient.id,
         balance: receiverBalanceNaira,
         currency: receiverWallet.currency,
       });
 
-      await this.walletUpdatesQueue.add('transfer-notification', {
+      await this.walletUpdatesQueue.add("transfer-notification", {
         userId: recipient.id,
         fromUsername: user.username,
         amount: amountNaira,
         transactionId: senderTx.id,
       });
-      
+
       // Notify sender
       await this.notificationsService.create(
         user.id,
-        'Transfer Sent',
+        "Transfer Sent",
         `Successfully transferred ${senderWallet.currency} ${amountNaira} to ${recipient.username}.`,
         NotificationType.TRANSACTION,
       );
@@ -271,13 +302,25 @@ export class WalletService {
       // Notify recipient
       await this.notificationsService.create(
         recipient.id,
-        'Transfer Received',
+        "Transfer Received",
         `You received ${receiverWallet.currency} ${amountNaira} from ${user.username}.`,
         NotificationType.TRANSACTION,
       );
 
-      await this.auditService.log(user, 'TRANSFER_SENT', 'Wallet', senderWallet.id, { balance: senderBalanceNaira });
-      await this.auditService.log(recipient, 'TRANSFER_RECEIVED', 'Wallet', receiverWallet.id, { balance: receiverBalanceNaira });
+      await this.auditService.log(
+        user,
+        "TRANSFER_SENT",
+        "Wallet",
+        senderWallet.id,
+        { balance: senderBalanceNaira },
+      );
+      await this.auditService.log(
+        recipient,
+        "TRANSFER_RECEIVED",
+        "Wallet",
+        receiverWallet.id,
+        { balance: receiverBalanceNaira },
+      );
 
       return {
         transaction: {
@@ -296,26 +339,36 @@ export class WalletService {
   }
 
   async getBalance(userId: string) {
-    const wallet = await this.dataSource.getRepository(Wallet).findOneBy({ userId });
-    if (!wallet) throw new NotFoundException('Wallet not found');
-    return { 
-      balance: parseFloat(new Decimal(wallet.balance).dividedBy(100).toFixed(2)), 
+    const wallet = await this.dataSource
+      .getRepository(Wallet)
+      .findOneBy({ userId });
+    if (!wallet) throw new NotFoundException("Wallet not found");
+    return {
+      balance: parseFloat(
+        new Decimal(wallet.balance).dividedBy(100).toFixed(2),
+      ),
       currency: wallet.currency,
-      userId: wallet.userId
+      userId: wallet.userId,
     };
   }
 
   async getWallet(userId: string) {
-    const wallet = await this.dataSource.getRepository(Wallet).findOneBy({ userId });
-    if (!wallet) throw new NotFoundException('Wallet not found');
+    const wallet = await this.dataSource
+      .getRepository(Wallet)
+      .findOneBy({ userId });
+    if (!wallet) throw new NotFoundException("Wallet not found");
 
-    const bankAccount = await this.dataSource.getRepository(BankAccount).findOne({
-      where: { userId, isActive: true },
-    });
+    const bankAccount = await this.dataSource
+      .getRepository(BankAccount)
+      .findOne({
+        where: { userId, isActive: true },
+      });
 
     return {
       ...wallet,
-      availableBalance: parseFloat(new Decimal(wallet.balance).dividedBy(100).toFixed(2)),
+      availableBalance: parseFloat(
+        new Decimal(wallet.balance).dividedBy(100).toFixed(2),
+      ),
       bankAccount: bankAccount || null,
     };
   }
@@ -328,7 +381,7 @@ export class WalletService {
     accountName: string,
   ) {
     const repo = this.dataSource.getRepository(BankAccount);
-    
+
     // Deactivate existing bank accounts
     await repo.update({ userId }, { isActive: false });
 
@@ -360,7 +413,8 @@ export class WalletService {
       where: { userId, isActive: true },
     });
 
-    if (!bankAccount) throw new NotFoundException('Active bank account not found');
+    if (!bankAccount)
+      throw new NotFoundException("Active bank account not found");
 
     bankAccount.paystackRecipientCode = recipientCode;
     return repo.save(bankAccount);
@@ -369,7 +423,7 @@ export class WalletService {
   async listBankAccounts(userId: string) {
     return this.dataSource.getRepository(BankAccount).find({
       where: { userId, isActive: true },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
   }
 
@@ -379,7 +433,7 @@ export class WalletService {
       where: { id, userId },
     });
 
-    if (!bankAccount) throw new NotFoundException('Bank account not found');
+    if (!bankAccount) throw new NotFoundException("Bank account not found");
 
     return repo.remove(bankAccount);
   }
@@ -402,10 +456,10 @@ export class WalletService {
     try {
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!wallet) throw new NotFoundException('Wallet not found');
+      if (!wallet) throw new NotFoundException("Wallet not found");
 
       const amountKobo = new Decimal(amount).times(100);
       wallet.balance = new Decimal(wallet.balance).plus(amountKobo).toNumber();
@@ -423,13 +477,15 @@ export class WalletService {
 
       await queryRunner.commitTransaction();
 
-      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      await this.walletUpdatesQueue.add('balance-update', {
+      const balanceNaira = new Decimal(wallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      await this.walletUpdatesQueue.add("balance-update", {
         userId,
         balance: balanceNaira,
         currency: wallet.currency,
       });
-      
+
       return transaction;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -453,14 +509,14 @@ export class WalletService {
     try {
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!wallet) throw new NotFoundException('Wallet not found');
+      if (!wallet) throw new NotFoundException("Wallet not found");
 
       const amountKobo = new Decimal(amount).times(100);
       if (new Decimal(wallet.balance).lessThan(amountKobo)) {
-        throw new BadRequestException('Insufficient balance');
+        throw new BadRequestException("Insufficient balance");
       }
 
       wallet.balance = new Decimal(wallet.balance).minus(amountKobo).toNumber();
@@ -478,13 +534,15 @@ export class WalletService {
 
       await queryRunner.commitTransaction();
 
-      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      await this.walletUpdatesQueue.add('balance-update', {
+      const balanceNaira = new Decimal(wallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      await this.walletUpdatesQueue.add("balance-update", {
         userId,
         balance: balanceNaira,
         currency: wallet.currency,
       });
-      
+
       return transaction;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -495,7 +553,9 @@ export class WalletService {
   }
 
   async confirmWithdrawal(reference: string) {
-    const transaction = await this.dataSource.getRepository(Transaction).findOneBy({ reference });
+    const transaction = await this.dataSource
+      .getRepository(Transaction)
+      .findOneBy({ reference });
     if (!transaction) return;
 
     transaction.status = TransactionStatus.SUCCESSFUL;
@@ -510,7 +570,7 @@ export class WalletService {
     try {
       const transaction = await queryRunner.manager.findOne(Transaction, {
         where: { reference },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
       if (!transaction || transaction.status !== TransactionStatus.PENDING) {
@@ -520,12 +580,14 @@ export class WalletService {
 
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId: transaction.userId },
-        lock: { mode: 'pessimistic_write' },
+        lock: { mode: "pessimistic_write" },
       });
 
-      if (!wallet) throw new NotFoundException('Wallet not found');
+      if (!wallet) throw new NotFoundException("Wallet not found");
 
-      wallet.balance = new Decimal(wallet.balance).plus(transaction.amount).toNumber();
+      wallet.balance = new Decimal(wallet.balance)
+        .plus(transaction.amount)
+        .toNumber();
       await queryRunner.manager.save(wallet);
 
       transaction.status = TransactionStatus.FAILED;
@@ -533,8 +595,10 @@ export class WalletService {
 
       await queryRunner.commitTransaction();
 
-      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
-      await this.walletUpdatesQueue.add('balance-update', {
+      const balanceNaira = new Decimal(wallet.balance)
+        .dividedBy(100)
+        .toFixed(2);
+      await this.walletUpdatesQueue.add("balance-update", {
         userId: transaction.userId,
         balance: balanceNaira,
         currency: wallet.currency,

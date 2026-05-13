@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { User } from '../users/entities/user.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
+import { User } from "../users/entities/user.entity";
 
 @Injectable()
 export class AuditService {
   constructor(
-    @InjectQueue('audit-processing') private readonly auditQueue: Queue,
+    @InjectQueue("audit-processing") private readonly auditQueue: Queue,
   ) {}
 
   async log(
@@ -20,7 +20,7 @@ export class AuditService {
     userAgent?: string,
   ) {
     // Push to audit queue instead of direct DB save
-    await this.auditQueue.add('log-audit', {
+    await this.auditQueue.add("log-audit", {
       user: { id: user.id }, // Send only necessary user info
       action,
       entity,

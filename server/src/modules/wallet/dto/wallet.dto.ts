@@ -1,5 +1,15 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, Max, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+} from "class-validator";
 
 export class DepositDto {
   @ApiProperty({ example: 100.0 })
@@ -19,7 +29,7 @@ export class WithdrawDto {
 }
 
 export class TransferDto {
-  @ApiProperty({ example: 'test@example.com' })
+  @ApiProperty({ example: "test@example.com" })
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -29,8 +39,7 @@ export class TransferDto {
   @IsPositive()
   @Min(0.01)
   amount: number;
-
-  }
+}
 
 export class WalletTransactionShortDto {
   @ApiProperty()
@@ -61,8 +70,8 @@ export class BalanceResponseDto {
   balance: number;
 
   @ApiProperty()
-  currency: string; 
-  
+  currency: string;
+
   @ApiProperty()
   userId: string;
 }

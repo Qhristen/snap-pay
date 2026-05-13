@@ -5,13 +5,13 @@ import {
   Min,
   Max,
   Length,
-} from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+} from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class AddBankAccountDto {
   @ApiProperty({
-    description: 'Nigerian bank account number (10 digits)',
-    example: '0123456789',
+    description: "Nigerian bank account number (10 digits)",
+    example: "0123456789",
     minLength: 10,
     maxLength: 10,
   })
@@ -20,8 +20,8 @@ export class AddBankAccountDto {
   accountNumber: string;
 
   @ApiProperty({
-    description: 'Bank code from Paystack',
-    example: '058',
+    description: "Bank code from Paystack",
+    example: "058",
   })
   @IsString()
   bankCode: string;
@@ -29,8 +29,8 @@ export class AddBankAccountDto {
 
 export class VerifyAccountDto {
   @ApiProperty({
-    description: 'Nigerian bank account number (10 digits)',
-    example: '0123456789',
+    description: "Nigerian bank account number (10 digits)",
+    example: "0123456789",
     minLength: 10,
     maxLength: 10,
   })
@@ -39,8 +39,8 @@ export class VerifyAccountDto {
   accountNumber: string;
 
   @ApiProperty({
-    description: 'Bank code from Paystack',
-    example: '058',
+    description: "Bank code from Paystack",
+    example: "058",
   })
   @IsString()
   bankCode: string;
@@ -48,7 +48,7 @@ export class VerifyAccountDto {
 
 export class InitiateWithdrawalDto {
   @ApiProperty({
-    description: 'Amount to withdraw in Naira',
+    description: "Amount to withdraw in Naira",
     example: 10000,
     minimum: 500,
     maximum: 5000000,
@@ -81,4 +81,3 @@ export class BankAccountResponseDto {
   @ApiProperty()
   createdAt: Date;
 }
-

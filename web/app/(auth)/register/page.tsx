@@ -60,7 +60,7 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen bg-background overflow-hidden">
       {/* Left Side: Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden flex-col justify-between p-36">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden flex-col justify-between p-36 mb-20">
         {/* Background Mesh/Glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#D4AF3715_0%,transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,#7C3AED10_0%,transparent_50%)]" />

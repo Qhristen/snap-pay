@@ -17,10 +17,10 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <Hero />
-        <StatsBar />
+        {/* <StatsBar /> */}
         <Features />
         <HowItWorks />
-        <BentoGrid />
+        {/* <BentoGrid /> */}
         <Testimonials />
         <Security />
         <CTABanner />

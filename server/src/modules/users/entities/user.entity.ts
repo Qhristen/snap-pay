@@ -6,15 +6,15 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { Exclude } from 'class-transformer';
-import { Wallet } from '../../wallet/entities/wallet.entity';
-import { AuditLog } from '../../audit/entities/audit-log.entity';
-import { BankAccount } from '../../wallet/entities/bank-account.entity';
+} from "typeorm";
+import { Exclude } from "class-transformer";
+import { Wallet } from "../../wallet/entities/wallet.entity";
+import { AuditLog } from "../../audit/entities/audit-log.entity";
+import { BankAccount } from "../../wallet/entities/bank-account.entity";
 
-@Entity('users')
+@Entity("users")
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({ unique: true })
@@ -40,7 +40,7 @@ export class User {
   updatedAt: Date;
 
   // Relations
-  @OneToOne(() => Wallet, (w) => w.user, { cascade: ['insert'] })
+  @OneToOne(() => Wallet, (w) => w.user, { cascade: ["insert"] })
   wallet: Wallet;
 
   @OneToMany(() => AuditLog, (al) => al.user)

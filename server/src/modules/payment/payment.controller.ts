@@ -10,18 +10,18 @@ import {
   Logger,
   Delete,
   Param,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
-} from '@nestjs/swagger';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { User } from '../users/entities/user.entity';
-import { TransactionType } from '../../common/enums/transaction.enum';
-import { PaystackService } from './paystack.service';
-import { WalletService } from '../wallet/wallet.service';
+} from "@nestjs/swagger";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { User } from "../users/entities/user.entity";
+import { TransactionType } from "../../common/enums/transaction.enum";
+import { PaystackService } from "./paystack.service";
+import { WalletService } from "../wallet/wallet.service";
 import {
   InitializeFundingDto,
   VerifyPaymentDto,
@@ -29,11 +29,11 @@ import {
   InitiateWithdrawalDto,
   VerifyAccountDto,
   BankAccountResponseDto,
-} from './dto';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+} from "./dto";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
 
-@ApiTags('Payment')
-@Controller('payment')
+@ApiTags("Payment")
+@Controller("payment")
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class PaymentController {
@@ -43,20 +43,20 @@ export class PaymentController {
   constructor(
     private readonly paystackService: PaystackService,
     private readonly walletService: WalletService,
-  ) { }
+  ) {}
 
-  @Get('banks')
-  @ApiOperation({ summary: 'List all Nigerian banks' })
+  @Get("banks")
+  @ApiOperation({ summary: "List all Nigerian banks" })
   @ApiResponse({
     status: 200,
-    description: 'List of banks retrieved successfully',
+    description: "List of banks retrieved successfully",
     schema: {
       example: {
         success: true,
         data: [
-          { name: 'Access Bank', code: '044' },
-          { name: 'GTBank', code: '058' },
-          { name: 'First Bank of Nigeria', code: '011' },
+          { name: "Access Bank", code: "044" },
+          { name: "GTBank", code: "058" },
+          { name: "First Bank of Nigeria", code: "011" },
         ],
       },
     },
@@ -69,26 +69,26 @@ export class PaymentController {
     };
   }
 
-  @Post('verify-account')
+  @Post("verify-account")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Verify bank account number' })
+  @ApiOperation({ summary: "Verify bank account number" })
   @ApiResponse({
     status: 200,
-    description: 'Account verified successfully',
+    description: "Account verified successfully",
     schema: {
       example: {
         success: true,
         data: {
-          accountNumber: '0123456789',
-          accountName: 'JOHN DOE',
-          bankCode: '058',
+          accountNumber: "0123456789",
+          accountName: "JOHN DOE",
+          bankCode: "058",
         },
       },
     },
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid bank account details',
+    description: "Invalid bank account details",
   })
   async verifyAccount(@Body() dto: VerifyAccountDto) {
     const accountDetails = await this.paystackService.verifyBankAccount(
@@ -106,20 +106,20 @@ export class PaymentController {
     };
   }
 
-  @Post('fund/initialize')
-  @ApiOperation({ summary: 'Initialize wallet funding via Paystack' })
+  @Post("fund/initialize")
+  @ApiOperation({ summary: "Initialize wallet funding via Paystack" })
   @ApiResponse({
     status: 201,
-    description: 'Payment initialized successfully',
+    description: "Payment initialized successfully",
     schema: {
       example: {
         success: true,
         data: {
-          authorizationUrl: 'https://checkout.paystack.com/abc123',
-          accessCode: 'abc123xyz',
-          reference: 'FUND_1234567890',
+          authorizationUrl: "https://checkout.paystack.com/abc123",
+          accessCode: "abc123xyz",
+          reference: "FUND_1234567890",
         },
-        message: 'Payment initialized successfully',
+        message: "Payment initialized successfully",
       },
     },
   })
@@ -127,14 +127,14 @@ export class PaymentController {
     @CurrentUser() user: User,
     @Body() dto: InitializeFundingDto,
   ) {
-    const reference = this.paystackService.generateReference('FUND');
+    const reference = this.paystackService.generateReference("FUND");
 
     const result = await this.paystackService.initializeTransaction(
       user.email,
       dto.amount,
       reference,
       {
-        type: 'wallet_funding',
+        type: "wallet_funding",
         userId: user.id,
       },
       dto.callbackUrl,
@@ -147,34 +147,34 @@ export class PaymentController {
         accessCode: result.access_code,
         reference: result.reference,
       },
-      message: 'Payment initialized successfully',
+      message: "Payment initialized successfully",
     };
   }
 
-  @Post('fund/verify')
-  @ApiOperation({ summary: 'Verify payment and credit wallet' })
+  @Post("fund/verify")
+  @ApiOperation({ summary: "Verify payment and credit wallet" })
   @ApiResponse({
     status: 200,
-    description: 'Payment verified and wallet credited',
+    description: "Payment verified and wallet credited",
     schema: {
       example: {
         success: true,
         data: {
           transaction: {
-            id: 'uuid',
-            type: 'DEPOSIT',
+            id: "uuid",
+            type: "DEPOSIT",
             amount: 5000,
             balanceAfter: 15000,
           },
           balance: 15000,
         },
-        message: '₦5,000 has been added to your wallet',
+        message: "₦5,000 has been added to your wallet",
       },
     },
   })
   @ApiResponse({
     status: 400,
-    description: 'Payment failed or does not belong to user',
+    description: "Payment failed or does not belong to user",
   })
   @HttpCode(HttpStatus.OK)
   async verifyFunding(
@@ -183,14 +183,14 @@ export class PaymentController {
   ) {
     const result = await this.paystackService.verifyTransaction(dto.reference);
 
-    if (result.status !== 'success') {
-      throw new BadRequestException('Payment was not successful');
+    if (result.status !== "success") {
+      throw new BadRequestException("Payment was not successful");
     }
 
     // Verify metadata
-    const metadata = result.metadata as Record<string, unknown>;
+    const metadata = result.metadata;
     if (metadata?.userId !== user.id) {
-      throw new BadRequestException('Payment does not belong to this user');
+      throw new BadRequestException("Payment does not belong to this user");
     }
 
     // Credit wallet (amount is in kobo, convert to naira)
@@ -216,11 +216,11 @@ export class PaymentController {
     };
   }
 
-  @Post('bank-account')
-  @ApiOperation({ summary: 'Add bank account for withdrawals' })
+  @Post("bank-account")
+  @ApiOperation({ summary: "Add bank account for withdrawals" })
   @ApiResponse({
     status: 201,
-    description: 'Bank account added successfully',
+    description: "Bank account added successfully",
     type: BankAccountResponseDto,
   })
   async addBankAccount(
@@ -249,25 +249,28 @@ export class PaymentController {
       user.id,
       dto.accountNumber,
       dto.bankCode,
-      bank?.name || 'Unknown Bank',
+      bank?.name || "Unknown Bank",
       accountDetails.account_name,
     );
 
     // Store recipient code
-    await this.walletService.updatePaystackRecipientCode(user.id, recipientCode);
+    await this.walletService.updatePaystackRecipientCode(
+      user.id,
+      recipientCode,
+    );
 
     return {
       success: true,
       data: bankAccount,
-      message: 'Bank account added successfully',
+      message: "Bank account added successfully",
     };
   }
 
-  @Get('bank-accounts')
-  @ApiOperation({ summary: 'List all user bank accounts' })
+  @Get("bank-accounts")
+  @ApiOperation({ summary: "List all user bank accounts" })
   @ApiResponse({
     status: 200,
-    description: 'List of bank accounts retrieved successfully',
+    description: "List of bank accounts retrieved successfully",
     type: [BankAccountResponseDto],
   })
   async listBankAccounts(@CurrentUser() user: User) {
@@ -278,46 +281,42 @@ export class PaymentController {
     };
   }
 
-  @Delete('bank-account/:id')
-  @ApiOperation({ summary: 'Deactivate/Remove a bank account' })
+  @Delete("bank-account/:id")
+  @ApiOperation({ summary: "Deactivate/Remove a bank account" })
   @ApiResponse({
     status: 200,
-    description: 'Bank account removed successfully',
+    description: "Bank account removed successfully",
   })
-  async deleteBankAccount(
-    @CurrentUser() user: User,
-    @Param('id') id: string,
-  ) {
+  async deleteBankAccount(@CurrentUser() user: User, @Param("id") id: string) {
     await this.walletService.deleteBankAccount(user.id, id);
     return {
       success: true,
-      message: 'Bank account removed successfully',
+      message: "Bank account removed successfully",
     };
   }
 
-
-
-  @Post('withdraw')
-  @ApiOperation({ summary: 'Initiate withdrawal to bank account' })
+  @Post("withdraw")
+  @ApiOperation({ summary: "Initiate withdrawal to bank account" })
   @ApiResponse({
     status: 201,
-    description: 'Withdrawal initiated successfully',
+    description: "Withdrawal initiated successfully",
     schema: {
       example: {
         success: true,
         data: {
-          reference: 'WD_1234567890',
+          reference: "WD_1234567890",
           amount: 10000,
-          status: 'pending',
+          status: "pending",
           balance: 5000,
         },
-        message: 'Withdrawal initiated successfully. You will receive the funds shortly.',
+        message:
+          "Withdrawal initiated successfully. You will receive the funds shortly.",
       },
     },
   })
   @ApiResponse({
     status: 400,
-    description: 'Insufficient balance, no bank account, or invalid OTP',
+    description: "Insufficient balance, no bank account, or invalid OTP",
   })
   async initiateWithdrawal(
     @CurrentUser() user: User,
@@ -327,21 +326,23 @@ export class PaymentController {
     const wallet = await this.walletService.getWallet(user.id);
 
     if (wallet.availableBalance < dto.amount) {
-      throw new BadRequestException('Insufficient balance');
+      throw new BadRequestException("Insufficient balance");
     }
 
     if (!wallet.bankAccount || !wallet.bankAccount.paystackRecipientCode) {
       throw new BadRequestException(
-        'Please add a bank account before withdrawing',
+        "Please add a bank account before withdrawing",
       );
     }
 
     // High-value threshold check (can be expanded later)
     if (dto.amount >= this.HIGH_VALUE_THRESHOLD) {
-      this.logger.warn(`High value withdrawal requested by user ${user.id}: ₦${dto.amount}`);
+      this.logger.warn(
+        `High value withdrawal requested by user ${user.id}: ₦${dto.amount}`,
+      );
     }
 
-    const reference = this.paystackService.generateReference('WD');
+    const reference = this.paystackService.generateReference("WD");
 
     // Debit wallet first
     await this.walletService.debitWallet(
@@ -357,7 +358,7 @@ export class PaymentController {
         wallet.bankAccount.paystackRecipientCode,
         dto.amount,
         reference,
-        'Wallet withdrawal',
+        "Wallet withdrawal",
       );
 
       const { balance } = await this.walletService.getBalance(user.id);
@@ -370,7 +371,8 @@ export class PaymentController {
           status: transfer.status,
           balance,
         },
-        message: 'Withdrawal initiated successfully. You will receive the funds shortly.',
+        message:
+          "Withdrawal initiated successfully. You will receive the funds shortly.",
       };
     } catch (error) {
       // Reverse the debit if transfer initiation fails
@@ -383,6 +385,4 @@ export class PaymentController {
       throw error;
     }
   }
-
-
 }

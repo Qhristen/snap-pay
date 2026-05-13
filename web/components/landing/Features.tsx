@@ -26,7 +26,7 @@ export function Features() {
   return (
     <section id="features" className="py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 text-center max-w-3xl mx-auto">
+        <div className="mb-16 text-center">
           <h2 className="font-sora text-4xl font-bold text-white md:text-5xl">Everything your wallet should be.</h2>
           <p className="mt-4 text-lg text-white/40">Built with the tools modern users demand — speed, transparency, and control.</p>
         </div>

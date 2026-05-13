@@ -55,17 +55,7 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-primary/5 border border-primary/20 p-6 flex flex-col items-center text-center">
-        <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-4">
-          <Wallet className="w-8 h-8 text-primary" />
-        </div>
-        <h3 className="text-xl font-bold text-white">Fund Your Wallet</h3>
-        <p className="text-sm text-muted-foreground mt-1 max-w-[250px]">
-          Enter the amount you want to deposit. You will be redirected to Paystack to complete the payment.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Input
           label="Amount to Deposit (NGN)"
           placeholder="5000"
@@ -79,7 +69,7 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
               key={preset}
               type="button"
               onClick={() => setValue('amount', preset.toString())}
-              className="py-2 bg-white/5 border border-white/10 text-xs font-bold text-white hover:bg-primary/10 hover:border-primary/50 transition-all"
+              className="py-2 bg-white/5 cursor-pointer border border-white/10 text-xs font-bold text-white hover:bg-primary/10 hover:border-primary/50 transition-all"
             >
               ₦{preset.toLocaleString()}
             </button>

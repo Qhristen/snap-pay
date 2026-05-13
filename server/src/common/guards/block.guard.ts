@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
 @Injectable()
 export class BlockGuard implements CanActivate {
@@ -13,8 +13,8 @@ export class BlockGuard implements CanActivate {
     if (!user) return true; // public route
     if (user.isBlocked) {
       throw new ForbiddenException({
-        code: 'ACCOUNT_BLOCKED',
-        message: 'Your account has been blocked.',
+        code: "ACCOUNT_BLOCKED",
+        message: "Your account has been blocked.",
       });
     }
     return true;

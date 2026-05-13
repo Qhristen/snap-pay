@@ -1,19 +1,22 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsOptional } from 'class-validator';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
-import { TransactionStatus } from 'src/common/enums';
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsDateString, IsEnum, IsOptional } from "class-validator";
+import { PaginationDto } from "../../../common/dto/pagination.dto";
+import { TransactionStatus } from "src/common/enums";
 
 export enum TransactionTypeFilter {
-  DEPOSIT = 'DEPOSIT',
-  WITHDRAWAL = 'WITHDRAWAL',
-  TRANSFER = 'TRANSFER',
-  TRANSFER_SENT = 'TRANSFER_SENT',
-  TRANSFER_RECEIVED = 'TRANSFER_RECEIVED',
-  ALL = 'ALL',
+  DEPOSIT = "DEPOSIT",
+  WITHDRAWAL = "WITHDRAWAL",
+  TRANSFER = "TRANSFER",
+  TRANSFER_SENT = "TRANSFER_SENT",
+  TRANSFER_RECEIVED = "TRANSFER_RECEIVED",
+  ALL = "ALL",
 }
 
 export class TransactionFilterDto extends PaginationDto {
-  @ApiPropertyOptional({ enum: TransactionTypeFilter, default: TransactionTypeFilter.ALL })
+  @ApiPropertyOptional({
+    enum: TransactionTypeFilter,
+    default: TransactionTypeFilter.ALL,
+  })
   @IsOptional()
   @IsEnum(TransactionTypeFilter)
   type?: TransactionTypeFilter;

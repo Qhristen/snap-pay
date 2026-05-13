@@ -3,11 +3,11 @@ import {
   Logger,
   BadRequestException,
   InternalServerErrorException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
-import * as crypto from 'crypto';
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { HttpService } from "@nestjs/axios";
+import { firstValueFrom } from "rxjs";
+import * as crypto from "crypto";
 
 export interface PaystackInitResponse {
   authorization_url: string;
@@ -61,25 +61,34 @@ export class PaystackService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    this.secretKey = this.configService.get<string>('paystackSecretKey') || process.env.PAYSTACK_SECRET_KEY || '';
-    this.baseUrl = this.configService.get<string>('paystackBaseUrl') || 'https://api.paystack.co';
+    this.secretKey =
+      this.configService.get<string>("paystackSecretKey") ||
+      process.env.PAYSTACK_SECRET_KEY ||
+      "";
+    this.baseUrl =
+      this.configService.get<string>("paystackBaseUrl") ||
+      "https://api.paystack.co";
     this.isConfigured = !!this.secretKey;
 
     if (!this.isConfigured) {
-      this.logger.warn('Paystack is not configured. Payment features will be disabled.');
+      this.logger.warn(
+        "Paystack is not configured. Payment features will be disabled.",
+      );
     }
   }
 
   private getHeaders() {
     return {
       Authorization: `Bearer ${this.secretKey}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
   }
 
   private checkConfigured() {
     if (!this.isConfigured) {
-      throw new InternalServerErrorException('Payment service is not configured');
+      throw new InternalServerErrorException(
+        "Payment service is not configured",
+      );
     }
   }
 
@@ -102,21 +111,26 @@ export class PaystackService {
             reference,
             metadata,
             callback_url: callbackUrl,
-            channels: ['card', 'bank', 'ussd', 'bank_transfer'],
+            channels: ["card", "bank", "ussd", "bank_transfer"],
           },
           { headers: this.getHeaders() },
         ),
       );
 
       if (!response.data.status) {
-        throw new BadRequestException(response.data.message || 'Failed to initialize transaction');
+        throw new BadRequestException(
+          response.data.message || "Failed to initialize transaction",
+        );
       }
 
       this.logger.log(`Transaction initialized: ${reference}`);
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to initialize transaction', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to initialize payment');
+      this.logger.error(
+        "Failed to initialize transaction",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException("Failed to initialize payment");
     }
   }
 
@@ -132,13 +146,18 @@ export class PaystackService {
       );
 
       if (!response.data.status) {
-        throw new BadRequestException(response.data.message || 'Failed to verify transaction');
+        throw new BadRequestException(
+          response.data.message || "Failed to verify transaction",
+        );
       }
 
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to verify transaction', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to verify payment');
+      this.logger.error(
+        "Failed to verify transaction",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException("Failed to verify payment");
     }
   }
 
@@ -147,16 +166,18 @@ export class PaystackService {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.get(
-          `${this.baseUrl}/bank?country=nigeria`,
-          { headers: this.getHeaders() },
-        ),
+        this.httpService.get(`${this.baseUrl}/bank?country=nigeria`, {
+          headers: this.getHeaders(),
+        }),
       );
 
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to list banks', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to fetch bank list');
+      this.logger.error(
+        "Failed to list banks",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException("Failed to fetch bank list");
     }
   }
 
@@ -175,20 +196,28 @@ export class PaystackService {
       );
 
       if (!response.data.status) {
-        throw new BadRequestException('Invalid bank account');
+        throw new BadRequestException("Invalid bank account");
       }
 
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to verify bank account', error.response?.data || error.message);
-      
+      this.logger.error(
+        "Failed to verify bank account",
+        error.response?.data || error.message,
+      );
+
       // If Paystack returns a 4xx client error, pass the specific message down to the frontend
-      if (error.response && error.response.status >= 400 && error.response.status < 500) {
-        const paystackMessage = error.response.data?.message || 'Invalid bank account details';
+      if (
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500
+      ) {
+        const paystackMessage =
+          error.response.data?.message || "Invalid bank account details";
         throw new BadRequestException(paystackMessage);
       }
-      
-      throw new InternalServerErrorException('Failed to verify bank account');
+
+      throw new InternalServerErrorException("Failed to verify bank account");
     }
   }
 
@@ -204,25 +233,32 @@ export class PaystackService {
         this.httpService.post(
           `${this.baseUrl}/transferrecipient`,
           {
-            type: 'nuban',
+            type: "nuban",
             name: accountName,
             account_number: accountNumber,
             bank_code: bankCode,
-            currency: 'NGN',
+            currency: "NGN",
           },
           { headers: this.getHeaders() },
         ),
       );
 
       if (!response.data.status) {
-        throw new BadRequestException(response.data.message || 'Failed to create recipient');
+        throw new BadRequestException(
+          response.data.message || "Failed to create recipient",
+        );
       }
 
       this.logger.log(`Transfer recipient created: ${accountNumber}`);
       return response.data.data.recipient_code;
     } catch (error) {
-      this.logger.error('Failed to create transfer recipient', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to create transfer recipient');
+      this.logger.error(
+        "Failed to create transfer recipient",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException(
+        "Failed to create transfer recipient",
+      );
     }
   }
 
@@ -230,7 +266,7 @@ export class PaystackService {
     recipientCode: string,
     amount: number, // in Naira
     reference: string,
-    reason: string = 'Wallet withdrawal',
+    reason: string = "Wallet withdrawal",
   ): Promise<PaystackTransferResponse> {
     this.checkConfigured();
 
@@ -239,7 +275,7 @@ export class PaystackService {
         this.httpService.post(
           `${this.baseUrl}/transfer`,
           {
-            source: 'balance',
+            source: "balance",
             amount: Math.round(amount * 100), // Convert to kobo
             recipient: recipientCode,
             reference,
@@ -250,14 +286,19 @@ export class PaystackService {
       );
 
       if (!response.data.status) {
-        throw new BadRequestException(response.data.message || 'Failed to initiate transfer');
+        throw new BadRequestException(
+          response.data.message || "Failed to initiate transfer",
+        );
       }
 
       this.logger.log(`Transfer initiated: ${reference}`);
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to initiate transfer', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to initiate withdrawal');
+      this.logger.error(
+        "Failed to initiate transfer",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException("Failed to initiate withdrawal");
     }
   }
 
@@ -266,16 +307,18 @@ export class PaystackService {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.get(
-          `${this.baseUrl}/transfer/${transferCode}`,
-          { headers: this.getHeaders() },
-        ),
+        this.httpService.get(`${this.baseUrl}/transfer/${transferCode}`, {
+          headers: this.getHeaders(),
+        }),
       );
 
       return response.data.data;
     } catch (error) {
-      this.logger.error('Failed to get transfer status', error.response?.data || error.message);
-      throw new InternalServerErrorException('Failed to get transfer status');
+      this.logger.error(
+        "Failed to get transfer status",
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException("Failed to get transfer status");
     }
   }
 
@@ -283,16 +326,16 @@ export class PaystackService {
     if (!this.isConfigured) return false;
 
     const hash = crypto
-      .createHmac('sha512', this.secretKey)
+      .createHmac("sha512", this.secretKey)
       .update(payload)
-      .digest('hex');
+      .digest("hex");
 
     return hash === signature;
   }
 
-  generateReference(prefix: string = 'TXN'): string {
+  generateReference(prefix: string = "TXN"): string {
     const timestamp = Date.now().toString(36);
-    const random = crypto.randomBytes(4).toString('hex');
+    const random = crypto.randomBytes(4).toString("hex");
     return `${prefix}_${timestamp}_${random}`.toUpperCase();
   }
 

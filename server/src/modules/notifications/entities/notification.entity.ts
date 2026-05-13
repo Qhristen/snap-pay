@@ -5,35 +5,35 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
-} from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+} from "typeorm";
+import { User } from "../../users/entities/user.entity";
 
 export enum NotificationType {
-  TRANSACTION = 'TRANSACTION',
-  SECURITY = 'SECURITY',
-  SYSTEM = 'SYSTEM',
+  TRANSACTION = "TRANSACTION",
+  SECURITY = "SECURITY",
+  SYSTEM = "SYSTEM",
 }
 
-@Entity('notifications')
+@Entity("notifications")
 export class Notification {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
   userId: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: "userId" })
   user: User;
 
   @Column()
   title: string;
 
-  @Column('text')
+  @Column("text")
   message: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: NotificationType,
     default: NotificationType.SYSTEM,
   })

@@ -1,10 +1,13 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
-import { Job } from 'bullmq';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Notification, NotificationType } from '../notifications/entities/notification.entity';
-import { WalletGatewayService } from '../gateway/wallet-gateway.service';
+import { Processor, WorkerHost } from "@nestjs/bullmq";
+import { Logger } from "@nestjs/common";
+import { Job } from "bullmq";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import {
+  Notification,
+  NotificationType,
+} from "../notifications/entities/notification.entity";
+import { WalletGatewayService } from "../gateway/wallet-gateway.service";
 
 interface NotificationJobData {
   userId: string;
@@ -13,7 +16,7 @@ interface NotificationJobData {
   type: NotificationType;
 }
 
-@Processor('notification-processing')
+@Processor("notification-processing")
 export class NotificationProcessor extends WorkerHost {
   private readonly logger = new Logger(NotificationProcessor.name);
 
@@ -27,7 +30,9 @@ export class NotificationProcessor extends WorkerHost {
 
   async process(job: Job<NotificationJobData>) {
     const { userId, title, message, type } = job.data;
-    this.logger.log(`[Job] Starting notification processing for user: ${userId}, Job ID: ${job.id}`);
+    this.logger.log(
+      `[Job] Starting notification processing for user: ${userId}, Job ID: ${job.id}`,
+    );
 
     try {
       const notification = this.notificationRepository.create({
@@ -37,8 +42,11 @@ export class NotificationProcessor extends WorkerHost {
         type,
       });
 
-      const savedNotification = await this.notificationRepository.save(notification);
-      this.logger.log(`[Database] Notification saved with ID: ${savedNotification.id}`);
+      const savedNotification =
+        await this.notificationRepository.save(notification);
+      this.logger.log(
+        `[Database] Notification saved with ID: ${savedNotification.id}`,
+      );
 
       // Emit socket event via service
       this.gatewayService.emitNotification(userId, savedNotification);
@@ -46,7 +54,9 @@ export class NotificationProcessor extends WorkerHost {
 
       return savedNotification;
     } catch (error) {
-      this.logger.error(`[Error] Failed to process notification for user ${userId}: ${error.message}`);
+      this.logger.error(
+        `[Error] Failed to process notification for user ${userId}: ${error.message}`,
+      );
       throw error;
     }
   }

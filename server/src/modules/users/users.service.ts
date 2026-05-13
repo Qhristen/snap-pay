@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Not, Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { AuditService } from '../audit/audit.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { ILike, Not, Repository } from "typeorm";
+import { User } from "./entities/user.entity";
+import { AuditService } from "../audit/audit.service";
 
 @Injectable()
 export class UsersService {
@@ -15,10 +15,10 @@ export class UsersService {
   async findById(id: string): Promise<User> {
     const user = await this.usersRepo.findOne({
       where: { id },
-      relations: ['wallet'],
+      relations: ["wallet"],
     });
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
     return user;
   }
@@ -31,7 +31,11 @@ export class UsersService {
     return this.usersRepo.findOneBy({ username });
   }
 
-  async search(query: string, limit: number, excludeUserId: string): Promise<User[]> {
+  async search(
+    query: string,
+    limit: number,
+    excludeUserId: string,
+  ): Promise<User[]> {
     return this.usersRepo.find({
       where: [
         { username: ILike(`%${query}%`), id: Not(excludeUserId) },
@@ -39,7 +43,7 @@ export class UsersService {
         { fullName: ILike(`%${query}%`), id: Not(excludeUserId) },
       ],
       take: limit,
-      select: ['id', 'username', 'email', 'fullName'],
+      select: ["id", "username", "email", "fullName"],
     });
   }
 
@@ -55,11 +59,11 @@ export class UsersService {
 
     await this.auditService.log(
       updatedUser,
-      'UPDATE_PROFILE',
-      'User',
+      "UPDATE_PROFILE",
+      "User",
       userId,
       data,
-      oldUser
+      oldUser,
     );
 
     return updatedUser;

@@ -56,7 +56,7 @@ export function Footer() {
         </div>
         
         <div className="pt-8 border-t border-white/5 text-center">
-          <p className="text-sm text-white/40">© 2025 SnapPay. All rights reserved.</p>
+          <p className="text-sm text-white/40">© 2026 SnapPay. All rights reserved.</p>
         </div>
       </div>
     </footer>

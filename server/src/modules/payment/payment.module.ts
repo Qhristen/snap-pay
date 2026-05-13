@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { BullModule } from '@nestjs/bullmq';
-import { PaymentController } from './payment.controller';
-import { WebhookController } from './webhook.controller';
-import { PaystackService } from './paystack.service';
-import { WalletModule } from '../wallet/wallet.module';
+import { Module } from "@nestjs/common";
+import { HttpModule } from "@nestjs/axios";
+import { BullModule } from "@nestjs/bullmq";
+import { PaymentController } from "./payment.controller";
+import { WebhookController } from "./webhook.controller";
+import { PaystackService } from "./paystack.service";
+import { WalletModule } from "../wallet/wallet.module";
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { WalletModule } from '../wallet/wallet.module';
       maxRedirects: 3,
     }),
     BullModule.registerQueue({
-      name: 'webhooks',
+      name: "webhooks",
     }),
     WalletModule,
   ],
