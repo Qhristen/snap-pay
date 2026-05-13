@@ -18,8 +18,8 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               {['Twitter', 'Instagram', 'LinkedIn'].map(social => (
-                <div key={social} className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-primary cursor-pointer transition-colors">
-                  <div className="h-4 w-4 bg-current rounded-sm" />
+                <div key={social} className="h-8 w-8 bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-primary cursor-pointer transition-colors">
+                  <div className="h-4 w-4 bg-current" />
                 </div>
               ))}
             </div>

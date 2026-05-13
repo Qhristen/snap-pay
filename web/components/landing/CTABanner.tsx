@@ -12,13 +12,13 @@ export function CTABanner() {
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="mx-auto max-w-7xl premium-gradient rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden"
+        className="mx-auto max-w-7xl premium-gradient p-12 md:p-24 text-center relative overflow-hidden"
       >
         <div className="relative z-10">
           <h2 className="font-sora text-4xl font-extrabold text-background md:text-6xl mb-6">Your wallet. Your speed. Your SnapPay.</h2>
           <p className="text-background/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-medium">Join 50,000+ users already sending money the smart way.</p>
           <Link href="/register">
-            <Button size="lg" className="bg-background text-primary hover:bg-white/90 font-bold text-xl px-12 py-8 rounded-2xl h-auto">
+            <Button size="lg" className="bg-background text-primary hover:bg-white/90 font-bold text-xl px-12 py-8 h-auto">
               Create Your Free Wallet <ChevronRight className="ml-2" />
             </Button>
           </Link>

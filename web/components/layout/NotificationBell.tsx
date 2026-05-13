@@ -21,7 +21,7 @@ export function NotificationBell() {
   const unreadCount = unreadData?.count || 0;
 
   return (
-    <div className="relative">
+    <div className="relative hidden lg:block">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative h-10 w-10 flex items-center cursor-pointer justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors"

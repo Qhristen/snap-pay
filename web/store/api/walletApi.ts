@@ -42,24 +42,6 @@ export const walletApi = api.injectEndpoints({
       transformResponse: (response: any): TransferResponse => response?.data ?? response,
       invalidatesTags: ["Wallet", "Transactions"],
     }),
-    deposit: builder.mutation<{ success: boolean; balance: number }, { amount: number }>({
-      query: (data) => ({
-        url: "/api/v1/wallet/deposit",
-        method: "POST",
-        data,
-      }),
-      transformResponse: (response: any) => response?.data ?? response,
-      invalidatesTags: ["Wallet", "Transactions"],
-    }),
-    withdraw: builder.mutation<{ success: boolean; balance: number }, { amount: number }>({
-      query: (data) => ({
-        url: "/api/v1/wallet/withdraw",
-        method: "POST",
-        data,
-      }),
-      transformResponse: (response: any) => response?.data ?? response,
-      invalidatesTags: ["Wallet", "Transactions"],
-    }),
 
   }),
   overrideExisting: true,
@@ -68,7 +50,5 @@ export const walletApi = api.injectEndpoints({
 export const { 
   useGetBalanceQuery, 
   useTransferMutation, 
-  useDepositMutation, 
-  useWithdrawMutation 
 } = walletApi;
 

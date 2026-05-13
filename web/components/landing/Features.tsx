@@ -10,9 +10,9 @@ const FeatureCard = ({ icon: Icon, title, description, index }: { icon: React.El
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.08 }}
-      className="group relative rounded-2xl border border-white/5 bg-surface p-8 transition-all hover:-translate-y-2 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 cursor-pointer"
+      className="group relative border border-white/5 bg-surface p-8 transition-all  cursor-pointer"
     >
-      <div className="absolute top-0 left-0 h-1 w-0 bg-primary transition-all duration-500 group-hover:w-full rounded-t-2xl" />
+      <div className="absolute top-0 left-0 h-1 w-0 bg-primary transition-all duration-500 group-hover:w-full" />
       <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
         <Icon size={24} />
       </div>

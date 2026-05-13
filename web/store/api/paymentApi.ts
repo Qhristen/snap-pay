@@ -60,18 +60,37 @@ export interface WithdrawResponse {
   remainingBalance: number;
 }
 
-// Unwrap NestJS { data: {...}, message, statusCode } wrapper
-function unwrap<T>(response: any): T {
-  return response?.data ?? response;
+export type ApiResponse<T> = {
+  data: T;
+  message?: string;
+  statusCode?: number;
+  success?: boolean;
+};
+
+// Unwrap NestJS { data: {...}, message, statusCode } wrapper safely
+function unwrap<T>(response: unknown): T {
+  if (response && typeof response === 'object' && !Array.isArray(response) && 'data' in response) {
+    return (response as ApiResponse<T>).data;
+  }
+  return response as T;
 }
 
 export const paymentApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getBanks: builder.query<Bank[], void>({
       query: () => "/api/v1/payment/banks",
-      transformResponse: (response: any): Bank[] => {
-        const payload = response?.data ?? response;
-        return Array.isArray(payload) ? payload : [];
+      transformResponse: (response: unknown): Bank[] => {
+        // Handle double-nested backend response { data: { data: [...] } }
+        let payload: unknown = response;
+        
+        if (payload && typeof payload === 'object' && !Array.isArray(payload) && 'data' in payload) {
+          payload = (payload as ApiResponse<unknown>).data;
+        }
+        if (payload && typeof payload === 'object' && !Array.isArray(payload) && 'data' in payload) {
+          payload = (payload as ApiResponse<unknown>).data;
+        }
+
+        return Array.isArray(payload) ? (payload as Bank[]) : [];
       },
       providesTags: ["Banks"],
     }),
@@ -111,9 +130,9 @@ export const paymentApi = api.injectEndpoints({
     }),
     getBankAccounts: builder.query<BankAccount[], void>({
       query: () => "/api/v1/payment/bank-accounts",
-      transformResponse: (response: any): BankAccount[] => {
-        const payload = response?.data ?? response;
-        return Array.isArray(payload) ? payload : [];
+      transformResponse: (response: unknown): BankAccount[] => {
+        const unwrapped = unwrap<BankAccount[]>(response);
+        return Array.isArray(unwrapped) ? unwrapped : [];
       },
       providesTags: ["Bank Accounts"],
     }),
@@ -129,9 +148,6 @@ export const paymentApi = api.injectEndpoints({
   }),
   overrideExisting: true,
 });
-
-
-
 
 export const {
   useGetBanksQuery,

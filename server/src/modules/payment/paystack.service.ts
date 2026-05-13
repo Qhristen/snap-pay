@@ -181,9 +181,13 @@ export class PaystackService {
       return response.data.data;
     } catch (error) {
       this.logger.error('Failed to verify bank account', error.response?.data || error.message);
-      if (error.response?.status === 422) {
-        throw new BadRequestException('Invalid bank account details');
+      
+      // If Paystack returns a 4xx client error, pass the specific message down to the frontend
+      if (error.response && error.response.status >= 400 && error.response.status < 500) {
+        const paystackMessage = error.response.data?.message || 'Invalid bank account details';
+        throw new BadRequestException(paystackMessage);
       }
+      
       throw new InternalServerErrorException('Failed to verify bank account');
     }
   }

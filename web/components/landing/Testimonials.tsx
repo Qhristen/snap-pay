@@ -9,7 +9,7 @@ const TestimonialCard = ({ quote, author, role, initials }: { quote: string, aut
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      className="flex flex-col rounded-2xl border border-white/5 bg-surface p-8 cursor-pointer"
+      className="flex flex-col border border-white/5 bg-surface p-8 cursor-pointer"
     >
       <div className="flex gap-1 mb-4">
         {[...Array(5)].map((_, i) => <Star key={i} size={16} className="fill-primary text-primary" />)}
