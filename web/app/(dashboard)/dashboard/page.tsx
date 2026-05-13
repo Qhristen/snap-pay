@@ -57,10 +57,10 @@ export default function DashboardPage() {
           <p className="text-white/40 text-sm font-medium">Your financial overview at a glance.</p>
         </div>
         <div className="flex items-center gap-3">
-           <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+           <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
               <LayoutDashboard size={18} />
            </Link>
-           <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+           <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
               <LogOut size={18} />
            </button>
         </div>

@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User as UserIcon, ArrowRight } from 'lucide-react';
 
 const transferSchema = z.object({
-  recipientEmail: z.string().email('Invalid email address'),
+  recipientEmail: z.email('Invalid email address'),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Amount must be a positive number',
   }),
@@ -59,7 +59,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
     if (!isValid) return;
 
     try {
-      const result = await searchUser({ email: recipientEmail }).unwrap();
+      const result = await searchUser({ query: recipientEmail }).unwrap();
       if (result) {
         setRecipientName(result.fullName);
         setStep(2);
@@ -84,7 +84,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
 
     try {
       await transfer({
-        recipientId: recipientEmail,
+        email: data.recipientEmail,
         amount: Number(data.amount),
       }).unwrap();
       dispatch(decrementBalance(Number(data.amount)));

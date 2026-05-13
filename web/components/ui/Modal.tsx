@@ -63,7 +63,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
                   <h2 className="font-sora text-lg font-bold text-white">{title}</h2>
                   <button
                     onClick={onClose}
-                    className="flex h-9 w-9 items-center justify-center bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
+                    className="flex h-9 w-9 cursor-pointer items-center justify-center bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
                   >
                     <X size={18} />
                   </button>

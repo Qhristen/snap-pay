@@ -145,11 +145,11 @@ export class WalletService {
   }
 
   async transfer(user: User, dto: TransferDto) {
-    if (user.id === dto.recipientId) {
+    if (user.email === dto.email) {
       throw new BadRequestException('Cannot transfer to yourself');
     }
 
-    const recipient = await this.usersService.findById(dto.recipientId);
+    const recipient = await this.usersService.findByEmail(dto.email);
     if (!recipient) throw new NotFoundException('Recipient not found');
 
     const queryRunner = this.dataSource.createQueryRunner();

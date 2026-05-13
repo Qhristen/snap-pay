@@ -6,7 +6,7 @@ export interface WalletBalance {
 }
 
 export interface TransferRequest {
-  recipientId: string;
+  email: string;
   amount: number;
 }
 

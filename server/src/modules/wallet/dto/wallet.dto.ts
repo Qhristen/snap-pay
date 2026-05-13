@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, Max, Min } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, Max, Min } from 'class-validator';
 
 export class DepositDto {
   @ApiProperty({ example: 100.0 })
@@ -19,10 +19,10 @@ export class WithdrawDto {
 }
 
 export class TransferDto {
-  @ApiProperty({ example: 'uuid-of-recipient' })
-  @IsUUID()
+  @ApiProperty({ example: 'test@example.com' })
+  @IsEmail()
   @IsNotEmpty()
-  recipientId: string;
+  email: string;
 
   @ApiProperty({ example: 20.0 })
   @IsNumber()

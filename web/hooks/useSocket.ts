@@ -23,14 +23,18 @@ export function useSocket() {
 
     if (socket) {
       socket.on('balance_updated', (newBalance: number) => {
+        console.log(newBalance, 'new balance');
         dispatch(setBalance(newBalance));
       });
 
       socket.on('transfer_received', ({ amount, from }: { amount: number; from: string }) => {
+        console.log(amount, from, 'transfer received');
         toast.success(`You received ${formatCurrency(amount)} from ${from}`);
       });
 
-      socket.on('transaction_created', () => {});
+      socket.on('transaction_created', () => {
+        console.log('transaction created');
+      });
     }
 
     return () => {
