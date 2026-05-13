@@ -105,7 +105,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
         {[1, 2, 3].map((s) => (
           <div
             key={s}
-            className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? 'bg-primary' : 'bg-white/5'}`}
+            className={`h-1 flex-1 transition-colors ${s <= step ? 'bg-primary' : 'bg-white/5'}`}
           />
         ))}
       </div>
@@ -127,7 +127,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
             />
             <Button
               type="button"
-              className="w-full h-14 rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow"
+              className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow"
               onClick={checkRecipient}
               isLoading={isSearching}
             >
@@ -145,7 +145,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
             className="space-y-4"
           >
             <div className="flex items-center gap-3 rounded-2xl bg-primary/10 border border-primary/20 p-4">
-              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-background">
+              <div className="h-10 w-10 bg-primary flex items-center justify-center text-background">
                 <UserIcon className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -184,7 +184,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
               {...register('note')}
             />
 
-            <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow">
+            <Button type="submit" className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow">
               Review Transfer <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
@@ -207,7 +207,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/5 bg-white/5 p-4 text-left text-sm space-y-2">
+            <div className=" border border-white/5 bg-white/5 p-4 text-left text-sm space-y-2">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Transaction Fee</span>
                 <span className="font-bold text-success">Free</span>
@@ -222,14 +222,14 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1 h-14 rounded-2xl"
+                className="flex-1 h-14 "
                 onClick={() => setStep(2)}
               >
                 Back
               </Button>
               <Button
                 type="button"
-                className="flex-1 h-14 rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow"
+                className="flex-1 h-14  bg-primary text-lg font-bold text-background hover:bg-gold-glow"
                 isLoading={isLoading}
                 onClick={handleSubmit(onSubmit)}
               >

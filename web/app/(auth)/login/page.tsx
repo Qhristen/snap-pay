@@ -47,8 +47,8 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
       {/* Background Glows */}
-      <div className="absolute top-0 left-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 h-[500px] w-[500px] translate-x-1/2 translate-y-1/2 rounded-full bg-primary/10 blur-[120px]" />
+      <div className="absolute top-0 left-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 bg-primary/10 blur-[120px]" />
+      <div className="absolute bottom-0 right-0 h-[500px] w-[500px] translate-x-1/2 translate-y-1/2 bg-primary/10 blur-[120px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -65,14 +65,14 @@ export default function LoginPage() {
           <p className="mt-2 text-sm font-medium text-muted-foreground">Secure access to your digital wallet</p>
         </div>
 
-        <div className="rounded-[2.5rem] border border-white/5 bg-surface p-8 shadow-2xl md:p-10">
+        <div className="border border-white/5 bg-surface p-8 shadow-2xl md:p-10">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <Input
                 label="Email Address"
                 placeholder="name@example.com"
                 error={errors.email?.message}
-                className="bg-background/50 border-white/5 rounded-2xl h-12"
+                className="bg-background/50 border-white/5 h-12"
                 {...register('email')}
               />
             </div>
@@ -85,11 +85,11 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 error={errors.password?.message}
-                className="bg-background/50 border-white/5 rounded-2xl h-12"
+                className="bg-background/50 border-white/5 h-12"
                 {...register('password')}
               />
             </div>
-            <Button type="submit" className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
+            <Button type="submit" className="h-14 w-full bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
               Sign In
             </Button>
           </form>

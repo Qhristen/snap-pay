@@ -34,3 +34,10 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
 }
+
+export enum TransactionTypeFilter {
+  DEPOSIT = 'DEPOSIT',
+  WITHDRAWAL = 'WITHDRAWAL',
+  TRANSFER = 'TRANSFER',
+  ALL = 'ALL',
+}

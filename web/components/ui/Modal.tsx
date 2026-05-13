@@ -56,14 +56,14 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             transition={{ type: 'spring', damping: 28, stiffness: 350 }}
             className="relative z-10 w-full max-w-lg mx-4 mb-0 sm:mb-0"
           >
-            <div className="rounded-t-3xl sm:rounded-3xl border border-white/10 bg-surface shadow-2xl overflow-hidden">
+            <div className="border border-white/10 bg-surface shadow-2xl overflow-hidden">
               {/* Header */}
               {title && (
                 <div className="flex items-center justify-between px-6 pt-6 pb-2">
                   <h2 className="font-sora text-lg font-bold text-white">{title}</h2>
                   <button
                     onClick={onClose}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
+                    className="flex h-9 w-9 items-center justify-center bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
                   >
                     <X size={18} />
                   </button>

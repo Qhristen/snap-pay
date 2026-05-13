@@ -20,7 +20,7 @@ export interface TransferNotificationPayload {
 }
 
 @WebSocketGateway({
-  cors: { origin: '*' },
+  cors: { origin: '*', credentials: true, },
   namespace: '/wallet',
 })
 export class WalletGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -29,7 +29,7 @@ export class WalletGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private readonly logger = new Logger(WalletGateway.name);
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async handleConnection(socket: Socket) {
     try {
@@ -43,10 +43,10 @@ export class WalletGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       const payload: { sub: string; email: string } = await this.jwtService.verifyAsync(token);
       socket.data.user = payload;
-      
+
       const userId = payload.sub;
       await socket.join(`user:${userId}`);
-      
+
       this.logger.log(`Client connected: ${socket.id}, User: ${userId}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';

@@ -55,7 +55,7 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
         error={errors.amount?.message}
         {...register('amount')}
       />
-      <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
+      <Button type="submit" className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
         Confirm Deposit
       </Button>
     </form>

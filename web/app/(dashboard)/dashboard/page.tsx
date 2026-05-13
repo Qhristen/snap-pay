@@ -10,9 +10,10 @@ import { useGetBalanceQuery } from '@/store/api/walletApi';
 import { useGetTransactionsQuery } from '@/store/api/transactionApi';
 
 import { formatCurrency, cn } from '@/lib/utils';
-import { ArrowDownLeft, ArrowUpRight, Send, History, Search, Filter, ChevronRight } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Send, History, Search, Filter, ChevronRight, LogOut, Icon, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useLogoutMutation } from '@/store/api/authApi';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
@@ -20,6 +21,10 @@ export default function DashboardPage() {
 
   // Fetch initial wallet balance
   const { data: walletData } = useGetBalanceQuery();
+
+  // Logout
+  const [logoutApi] = useLogoutMutation();
+  
 
   // Fetch recent transactions
   const { data: transactionsResponse, isLoading: isLoadingTransactions } = useGetTransactionsQuery({ limit: 5 });
@@ -32,6 +37,15 @@ export default function DashboardPage() {
   }, [walletData, dispatch]);
 
 
+  const handleLogout = async () => {
+    try {
+      await logoutApi().unwrap();
+    } catch {
+      // onQueryStarted in authApi already clears state and storage
+    }
+    window.location.href = '/login';
+  };
+
   return (
     <div className="space-y-10 pb-10 max-w-6xl mx-auto">
       {/* Header */}
@@ -43,11 +57,11 @@ export default function DashboardPage() {
           <p className="text-white/40 text-sm font-medium">Your financial overview at a glance.</p>
         </div>
         <div className="flex items-center gap-3">
-           <button className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
-              <Search size={18} />
-           </button>
-           <button className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
-              <Filter size={18} />
+           <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+              <LayoutDashboard size={18} />
+           </Link>
+           <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+              <LogOut size={18} />
            </button>
         </div>
       </header>
@@ -82,7 +96,7 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <div className="rounded-[2.5rem] border border-white/5 bg-surface overflow-hidden shadow-2xl">
+        <div className="border border-white/5 bg-surface overflow-hidden shadow-2xl">
           <div className="p-0">
             {isLoadingTransactions ? (
               <div className="p-12 text-center">
@@ -114,7 +128,7 @@ export default function DashboardPage() {
                     >
                       <div className="flex items-center gap-5">
                         <div className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-2xl border border-white/5 transition-transform group-hover:scale-110",
+                          "flex h-12 w-12 items-center justify-center border border-white/5 transition-transform group-hover:scale-110",
                           isCredit ? "bg-success/10 text-success" : "bg-white/5 text-white"
                         )}>
                           {(type === 'deposit' || type === 'transfer_received') && <ArrowDownLeft className="h-6 w-6" />}

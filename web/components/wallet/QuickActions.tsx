@@ -36,9 +36,9 @@ export function QuickActions() {
             {action.key === 'history' ? (
               <Link
                 href="/transactions"
-                className="group flex flex-col items-center gap-3 p-4 rounded-3xl border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer"
+                className="group flex flex-col items-center gap-3 p-4 border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer"
               >
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
+                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
                   <action.icon className={`h-6 w-6 ${action.color}`} />
                 </div>
                 <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors tracking-tight uppercase">{action.label}</span>
@@ -46,9 +46,9 @@ export function QuickActions() {
             ) : (
               <button
                 onClick={() => setActiveModal(action.key)}
-                className="group flex flex-col items-center gap-3 p-4 rounded-3xl border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer w-full"
+                className="group flex flex-col items-center gap-3 p-4 border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer w-full"
               >
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
+                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
                   <action.icon className={`h-6 w-6 ${action.color}`} />
                 </div>
                 <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors tracking-tight uppercase">{action.label}</span>

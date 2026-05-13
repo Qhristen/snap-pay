@@ -41,7 +41,7 @@ export default function DashboardLayout({
           {children}
         </div>
       </main>
-      <MobileNav />
+      {/* <MobileNav /> */}
     </div>
   );
 }

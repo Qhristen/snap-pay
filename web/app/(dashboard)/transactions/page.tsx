@@ -5,20 +5,20 @@ import { useGetTransactionsQuery } from '@/store/api/transactionApi';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { formatCurrency, cn } from '@/lib/utils';
-import { ArrowDownLeft, ArrowUpRight, Send, Search, Filter } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Send, Search, Filter, LayoutDashboard } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import { TransactionTypeFilter } from '@/types';
+import Link from 'next/link';
 
 export default function TransactionsPage() {
   const [page, setPage] = useState(1);
-  const [type, setType] = useState<string>('all');
-  const [search, setSearch] = useState('');
+  const [type, setType] = useState<TransactionTypeFilter>(TransactionTypeFilter.ALL);
 
   const { data, isLoading } = useGetTransactionsQuery({
     page,
     limit: 10,
-    type: type === 'all' ? undefined : type as any,
-    search
+    type: type === TransactionTypeFilter.ALL ? undefined : type,
   });
 
   const transactions = data?.data || [];
@@ -27,22 +27,20 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Transaction History</h1>
-        <p className="text-muted-foreground">Keep track of all your financial activities.</p>
+      <div className='flex items-center justify-between'>
+        <div>
+          <h1 className="text-3xl font-bold">Transaction History</h1>
+          <p className="text-white/40">Keep track of all your financial activities.</p>
+        </div>
+        <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center rounded-xl bg-surface border border-white/5 text-muted-foreground hover:text-white transition-colors">
+          <LayoutDashboard size={18} />
+        </Link>
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-end">
-        <div className="flex-1">
-          <Input
-            placeholder="Search transactions..."
-            className="pl-10"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-2">
-          {['all', 'deposit', 'withdrawal', 'transfer'].map((t) => (
+
+        <div className="flex flex-row-reverse gap-2">
+          {Object.values(TransactionTypeFilter).map((t) => (
             <Button
               key={t}
               variant={type === t ? 'primary' : 'outline'}
@@ -88,19 +86,19 @@ export default function TransactionsPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="font-semibold">{tx.description || tx.type.replace('_', ' ')}</p>
+                          <p className="font-semibold text-white/40 text-sm md:text-md">{tx.description || tx.type.replace('_', ' ')}</p>
                           <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase">
                             {tx.status?.toLowerCase() || 'completed'}
                           </span>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs md:text-sm text-white/40">
                           {new Date(tx.createdAt).toLocaleString()}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className={cn(
-                        "text-lg font-bold",
+                        "text-md md:text-lg font-bold",
                         isCredit ? "text-green-500" : "text-red-500"
                       )}>
                         {isCredit ? '+' : '-'}{formatCurrency(amount)}

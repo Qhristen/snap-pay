@@ -20,7 +20,6 @@ export interface GetTransactionsParams {
   limit?: number;
   type?: TransactionType;
   status?: TransactionStatus;
-  search?: string;
 }
 
 

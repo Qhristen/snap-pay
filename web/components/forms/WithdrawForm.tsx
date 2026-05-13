@@ -60,7 +60,7 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl bg-white/5 border border-white/5 p-4">
+      <div className="bg-white/5 border border-white/5 p-4">
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available Balance</p>
         <p className="text-2xl font-mono font-bold text-white mt-1">{formatCurrency(balance)}</p>
       </div>
@@ -74,7 +74,7 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
         {Number(amount) > balance && (
           <p className="text-xs font-medium text-destructive">Insufficient balance</p>
         )}
-        <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
+        <Button type="submit" className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow" isLoading={isLoading}>
           Confirm Withdrawal
         </Button>
       </form>
