@@ -77,21 +77,9 @@ function unwrap<T>(response: unknown): T {
 
 export const paymentApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getBanks: builder.query<Bank[], void>({
+    getBanks: builder.query<{ data: {data: Bank[]}  }, void>({
       query: () => "/api/v1/payment/banks",
-      transformResponse: (response: unknown): Bank[] => {
-        // Handle double-nested backend response { data: { data: [...] } }
-        let payload: unknown = response;
-        
-        if (payload && typeof payload === 'object' && !Array.isArray(payload) && 'data' in payload) {
-          payload = (payload as ApiResponse<unknown>).data;
-        }
-        if (payload && typeof payload === 'object' && !Array.isArray(payload) && 'data' in payload) {
-          payload = (payload as ApiResponse<unknown>).data;
-        }
-
-        return Array.isArray(payload) ? (payload as Bank[]) : [];
-      },
+      // transformResponse: (response: { data: Bank[] }) => response.data,
       providesTags: ["Banks"],
     }),
     verifyAccount: builder.mutation<VerifyAccountResponse, VerifyAccountRequest>({

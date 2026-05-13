@@ -27,9 +27,10 @@ interface AddBankAccountFormProps {
 }
 
 export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormProps) {
-  const { data: banks = [], isLoading: isLoadingBanks } = useGetBanksQuery();
+  const { data: banksData, isLoading: isLoadingBanks } = useGetBanksQuery();
   const [verifyAccount, { isLoading: isVerifying }] = useVerifyAccountMutation();
   const [linkAccount, { isLoading: isLinking }] = useLinkBankAccountMutation();
+  const banks = banksData?.data.data
 
   const [accountName, setAccountName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
