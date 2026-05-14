@@ -64,7 +64,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
           <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Account Holder</p>
-              <p className="text-lg font-bold text-white tracking-tight">{user?.fullName}</p>
+              <p className="text-lg font-bold text-white tracking-tight">{user?.fullName?.toUpperCase()}</p>
             </div>
             
             <div className="flex items-center gap-4">
