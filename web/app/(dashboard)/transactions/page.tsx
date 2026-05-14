@@ -56,9 +56,12 @@ export default function TransactionsPage() {
       <Card className="premium-card">
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-12 text-center text-muted-foreground">Loading transactions...</div>
+            <div className="flex flex-col items-center justify-center p-12">
+             <div className="h-8 w-8 border-2 border-primary border-t-transparent animate-spin" />
+            <div className="p-12 text-center text-white/40">Loading transactions...</div>
+            </div>
           ) : transactions.length === 0 ? (
-            <div className="p-12 text-center text-muted-foreground">No transactions found</div>
+            <div className="p-12 text-center text-white/40">No transactions found</div>
           ) : (
             <div className="divide-y divide-white/5">
               {transactions.map((tx: any, index: number) => (

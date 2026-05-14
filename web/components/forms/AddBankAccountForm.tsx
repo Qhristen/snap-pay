@@ -126,9 +126,9 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
-              {filteredBanks.map((bank) => (
+              {filteredBanks.map((bank, i) => (
                 <div
-                  key={bank.code}
+                  key={i}
                   className="px-4 py-3 hover:bg-primary/10 cursor-pointer text-sm text-white flex items-center justify-between"
                   onClick={() => {
                     setValue('bankCode', bank.code);

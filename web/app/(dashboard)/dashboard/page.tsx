@@ -85,7 +85,7 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <section className="space-y-6">
         <div className="flex items-center gap-2">
-          <div className="h-1 w-8 bg-primary rounded-full" />
+          <div className="h-1 w-8 bg-primary" />
           <h2 className="font-sora text-xl font-bold">Quick Actions</h2>
         </div>
         <QuickActions />
@@ -95,7 +95,7 @@ export default function DashboardPage() {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-1 w-8 bg-primary rounded-full" />
+            <div className="h-1 w-8 bg-primary" />
             <h2 className="font-sora text-xl font-bold">Recent Activity</h2>
           </div>
           <Link href="/transactions" className="flex items-center gap-1 text-sm font-bold text-primary hover:text-gold-glow transition-colors uppercase tracking-tighter">
@@ -107,12 +107,12 @@ export default function DashboardPage() {
           <div className="p-0">
             {isLoadingTransactions ? (
               <div className="p-12 text-center">
-                <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <div className="h-8 w-8 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4" />
                 <p className="text-muted-foreground text-sm font-medium">Syncing your transactions...</p>
               </div>
             ) : transactionsData?.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-16 text-center">
-                <div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                <div className="h-20 w-20 bg-white/5 flex items-center justify-center mb-6">
                   <History className="h-10 w-10 text-white/40" />
                 </div>
                 <h3 className="font-bold text-lg mb-2">No activity yet</h3>

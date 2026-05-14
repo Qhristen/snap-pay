@@ -15,7 +15,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
   return (
     <div className="relative group">
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-primary/20 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+      <div className="absolute inset-0 bg-primary/20 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <Card className="relative overflow-hidden border border-white/5 bg-surface text-white shadow-2xl transition-all duration-500 group-hover:border-primary/20">
         <div className="absolute top-0 right-0 p-8 opacity-5">
@@ -25,11 +25,11 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
         <CardContent className="p-8 md:p-10">
           <div className="flex items-start justify-between">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex items-center gap-2 text-white/40">
                 <p className="text-xs font-bold uppercase tracking-widest">Available Balance</p>
                 <button
                   onClick={() => setShowBalance(!showBalance)}
-                  className="rounded-full bg-white/5 p-1.5 transition-hover hover:bg-white/10"
+                  className="bg-white/5 p-1.5 transition-hover hover:bg-white/10"
                 >
                   {showBalance ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
@@ -45,7 +45,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
                 >
                   {isLoadingWallet ? (
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      <div className="h-8 w-8 border-2 border-primary border-t-transparent animate-spin" />
                       <span className="text-white/40 text-sm font-medium">Syncing your wallet...</span>
                     </div>
                   ) : (
@@ -55,8 +55,8 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
               </AnimatePresence>
             </div>
 
-            <div className="hidden sm:flex items-center gap-2 rounded-2xl bg-primary/10 px-4 py-2 border border-primary/20 backdrop-blur-sm">
-              <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <div className="hidden sm:flex items-center gap-2 bg-primary/10 px-4 py-2 border border-primary/20 backdrop-blur-sm">
+              <div className="h-2 w-2 bg-primary animate-pulse" />
               <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">Live Status</span>
             </div>
           </div>
@@ -70,7 +70,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
             <div className="flex items-center gap-4">
                <div className="flex -space-x-2">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className="h-8 w-8 rounded-full border-2 border-surface bg-muted flex items-center justify-center text-[10px] font-bold">
+                    <div key={i} className="h-8 w-8 border-2 border-surface bg-muted flex items-center justify-center text-[10px] font-bold">
                        {i === 3 ? '+' : ''}
                     </div>
                   ))}
