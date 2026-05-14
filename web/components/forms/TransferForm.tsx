@@ -60,7 +60,8 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
 
     try {
       const result = await getUserByEmail(recipientEmail).unwrap();
-      if (result) {
+      console.log({result}, "result");
+      if (result.email) {
         setRecipientName(result.fullName);
         setStep(2);
       } else {

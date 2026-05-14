@@ -70,7 +70,7 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
       <div className="text-right">
         <p className={cn(
           "text-base font-mono font-bold tracking-tighter",
-          isCredit ? "text-success" : "text-white"
+          isCredit ? "text-success" : "text-white",
         )}>
           {isCredit ? '+' : '-'}{formatCurrency(amount)}
         </p>

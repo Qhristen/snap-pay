@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectQueue } from "@nestjs/bullmq";
@@ -25,6 +26,8 @@ import { NotificationType } from "../notifications/entities/notification.entity"
 
 @Injectable()
 export class WalletService {
+  private readonly logger = new Logger(WalletService.name);
+
   constructor(
     private readonly dataSource: DataSource,
     private readonly gatewayService: WalletGatewayService,
@@ -460,19 +463,24 @@ export class WalletService {
       if (!wallet) throw new NotFoundException("Wallet not found");
 
       const amountKobo = new Decimal(amount).times(100);
+      const oldBalance = wallet.balance;
       wallet.balance = new Decimal(wallet.balance).plus(amountKobo).toNumber();
       await queryRunner.manager.save(wallet);
+
+      this.logger.log(`Updated wallet balance for user ${userId}: ${oldBalance} -> ${wallet.balance}`);
 
       let transaction = await queryRunner.manager.findOne(Transaction, {
         where: { reference },
       });
 
       if (!transaction) {
-        throw new NotFoundException("Transaction not found");
+        this.logger.error(`Transaction not found for reference: ${reference}`);
+        throw new NotFoundException(`Transaction not found for reference: ${reference}`);
       }
       
       transaction.status = TransactionStatus.SUCCESSFUL;
       await queryRunner.manager.save(transaction);
+      this.logger.log(`Marked transaction ${reference} as SUCCESSFUL`);
 
       await queryRunner.commitTransaction();
 

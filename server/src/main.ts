@@ -21,25 +21,25 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  if (config.get("nodeEnv") !== "production") {
-    const swaggerDoc = new DocumentBuilder()
-      .setTitle("SnapPay API")
-      .setDescription(
-        "SnapPay is a real-time digital wallet API built with NestJS that lets users store, move, and track money instantly",
-      )
-      .setVersion("1.0")
-      .addBearerAuth()
-      .addTag("Auth")
-      .addTag("Users")
-      .addTag("Wallet")
-      .addTag("Transactions")
-      .build();
-    SwaggerModule.setup(
-      "docs",
-      app,
-      SwaggerModule.createDocument(app, swaggerDoc),
-    );
-  }
+
+  const swaggerDoc = new DocumentBuilder()
+    .setTitle("SnapPay API")
+    .setDescription(
+      "SnapPay is a real-time digital wallet API built with NestJS that lets users store, move, and track money instantly",
+    )
+    .setVersion("1.0")
+    .addBearerAuth()
+    .addTag("Auth")
+    .addTag("Users")
+    .addTag("Wallet")
+    .addTag("Transactions")
+    .build();
+  SwaggerModule.setup(
+    "docs",
+    app,
+    SwaggerModule.createDocument(app, swaggerDoc),
+  );
+
 
   const port = config.get("port")!;
 

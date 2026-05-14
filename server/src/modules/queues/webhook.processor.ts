@@ -60,7 +60,16 @@ export class WebhookProcessor extends WorkerHost {
   }
 
   private async handleChargeSuccess(data: PaystackWebhookEvent["data"]) {
-    const { reference, amount, metadata, status } = data;
+    let { reference, amount, metadata, status } = data;
+
+    // Paystack might return metadata as a JSON string
+    if (typeof metadata === "string") {
+      try {
+        metadata = JSON.parse(metadata);
+      } catch (e) {
+        this.logger.error(`Failed to parse metadata for transaction ${reference}`);
+      }
+    }
 
     // We only handle wallet funding (deposits) via this webhook
     if (metadata?.type !== "wallet_funding" && metadata?.type !== "deposit") {
@@ -70,7 +79,7 @@ export class WebhookProcessor extends WorkerHost {
       return;
     }
 
-    const userId = metadata.userId as string;
+    const userId = (metadata as any)?.userId as string;
     if (!userId) {
       this.logger.error(`No userId in charge metadata: ${reference}`);
       return;
@@ -90,14 +99,17 @@ export class WebhookProcessor extends WorkerHost {
     }
 
     if (status === "success") {
+      // Paystack amount is in kobo, WalletService.creditWallet expects Naira
+      const amountInNaira = new Decimal(amount).dividedBy(100).toNumber();
+
       await this.walletService.creditWallet(
         userId,
-        amount,
+        amountInNaira,
         reference,
       );
 
       this.logger.log(
-        `Successfully credited ₦${amount / 100} to user ${userId} for reference ${reference}`,
+        `Successfully credited ₦${amountInNaira.toLocaleString()} to user ${userId} for reference ${reference}`,
       );
     }
   }

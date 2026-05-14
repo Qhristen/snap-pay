@@ -1,13 +1,15 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Patch, Body, Query } from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
   ApiOkResponse,
   ApiBearerAuth,
   ApiUnauthorizedResponse,
+  ApiNotFoundResponse,
 } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { SearchUserDto } from "./dto/search-user.dto";
+import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { User } from "./entities/user.entity";
 
@@ -26,6 +28,20 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: "Missing or invalid access token" })
   async getMe(@CurrentUser() user: User) {
     return this.usersService.findById(user.id);
+  }
+
+  @Patch("profile")
+  @ApiOperation({
+    summary: "Update user profile",
+    description: "Allows the authenticated user to update their profile information.",
+  })
+  @ApiOkResponse({ description: "Profile updated successfully", type: User })
+  @ApiUnauthorizedResponse({ description: "Missing or invalid access token" })
+  async updateProfile(
+    @CurrentUser() user: User,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.usersService.update(user.id, dto);
   }
 
   @Get("search")
@@ -49,6 +65,7 @@ export class UsersController {
     description: "Find a user by their exact email address.",
   })
   @ApiOkResponse({ description: "User found", type: User })
+  @ApiNotFoundResponse({ description: "User with this email not found" })
   @ApiUnauthorizedResponse({ description: "Missing or invalid access token" })
   async getUserByEmail(@Query("email") email: string) {
     return this.usersService.findByEmail(email);

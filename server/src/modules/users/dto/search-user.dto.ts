@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsInt,
   IsNotEmpty,
@@ -11,7 +11,7 @@ import {
 import { Type } from "class-transformer";
 
 export class SearchUserDto {
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: "Search query (username or email)",
     minLength: 2,
   })
