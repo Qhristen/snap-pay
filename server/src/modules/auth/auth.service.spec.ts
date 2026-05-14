@@ -3,6 +3,10 @@ import { AuthService } from "./auth.service";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { DataSource } from "typeorm";
+import { ConfigService } from "@nestjs/config";
+import { AuditService } from "../audit/audit.service";
+import { getQueueToken } from "@nestjs/bullmq";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { UnauthorizedException, ConflictException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
@@ -13,11 +17,15 @@ describe("AuthService", () => {
   let usersService: UsersService;
   let jwtService: JwtService;
   let dataSource: DataSource;
+  let configService: ConfigService;
+  let auditService: AuditService;
+  let cacheManager: any;
 
   const mockUser = {
     id: "uuid-1",
     email: "test@example.com",
     username: "testuser",
+    fullName: "Test User",
     passwordHash: "hashedPassword",
   };
 
@@ -29,6 +37,7 @@ describe("AuthService", () => {
 
   const mockJwtService = {
     sign: jest.fn().mockReturnValue("token"),
+    verify: jest.fn(),
   };
 
   const mockQueryRunner = {
@@ -47,6 +56,24 @@ describe("AuthService", () => {
     createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   };
 
+  const mockConfigService = {
+    get: jest.fn().mockReturnValue("secret"),
+  };
+
+  const mockAuditService = {
+    log: jest.fn(),
+  };
+
+  const mockMailQueue = {
+    add: jest.fn(),
+  };
+
+  const mockCacheManager = {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
@@ -55,6 +82,10 @@ describe("AuthService", () => {
         { provide: UsersService, useValue: mockUsersService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: DataSource, useValue: mockDataSource },
+        { provide: ConfigService, useValue: mockConfigService },
+        { provide: AuditService, useValue: mockAuditService },
+        { provide: getQueueToken("mail-processing"), useValue: mockMailQueue },
+        { provide: CACHE_MANAGER, useValue: mockCacheManager },
       ],
     }).compile();
 
@@ -62,6 +93,9 @@ describe("AuthService", () => {
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
     dataSource = module.get<DataSource>(DataSource);
+    configService = module.get<ConfigService>(ConfigService);
+    auditService = module.get<AuditService>(AuditService);
+    cacheManager = module.get(CACHE_MANAGER);
   });
 
   it("should be defined", () => {
@@ -73,6 +107,7 @@ describe("AuthService", () => {
       const dto = {
         email: "test@example.com",
         username: "testuser",
+        fullName: "Test User",
         password: "Password123!",
       };
       mockUsersService.findByEmail.mockResolvedValue(null);
@@ -86,6 +121,7 @@ describe("AuthService", () => {
       expect(result.user.email).toBe(dto.email);
       expect(result.accessToken).toBe("token");
       expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
+      expect(mockMailQueue.add).toHaveBeenCalled();
     });
   });
 

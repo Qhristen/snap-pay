@@ -89,6 +89,33 @@ Once the server is running, you can access the Swagger documentation at:
   - `audit/`: System-wide audit logging service.
   - `payment/`: Integration with external payment providers (Paystack).
   - `users/`: User profile management.
+- `notifications/`: User notification system.
+
+## 🧪 Testing
+
+SnapPay includes a robust suite of unit tests for core modules to ensure financial logic and authentication flows remain correct.
+
+### Running Tests
+
+- **Run all tests:**
+  ```bash
+  npm run test
+  ```
+
+- **Run tests in watch mode:**
+  ```bash
+  npm run test:watch
+  ```
+
+- **Generate test coverage report:**
+  ```bash
+  npm run test:cov
+  ```
+
+- **Run specific test suite:**
+  ```bash
+  npx jest src/modules/payment/payment.service.spec.ts
+  ```
 
 ## 📄 License
 

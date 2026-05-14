@@ -52,6 +52,37 @@ export class LoginDto {
   password: string;
 }
 
+export class ForgotPasswordDto {
+  @ApiProperty({ example: "user@example.com" })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({ example: "user@example.com" })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ example: "123456" })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(6)
+  otp: string;
+
+  @ApiProperty({ example: "NewPassword123!", minLength: 8 })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message:
+      "Password too weak. Must contain uppercase, lowercase, number/special character",
+  })
+  password: string;
+}
+
 export class AuthResponseDto {
   @ApiProperty()
   user: {

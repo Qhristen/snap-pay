@@ -13,8 +13,11 @@ export const userApi = api.injectEndpoints({
       providesTags: ["User"],
     }),
     getUserByEmail: builder.query<User, string>({
-      query: (email) => `/api/v1/users/by-email?email=${email}`,
-      transformResponse: (response: any) => response?.data ?? response,
+      query: (email) => `/api/v1/users/by-email?email=${encodeURIComponent(email)}`,
+      transformResponse: (response: any) => {
+        const data = response?.data ?? response;
+        return data || {};
+      },
       providesTags: ["User"],
     }),
   }),

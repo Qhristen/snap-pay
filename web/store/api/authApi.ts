@@ -59,6 +59,16 @@ function clearAuth() {
   Cookies.remove("snappay_token");
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  otp: string;
+  password: string;
+}
+
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation<AuthResponse, RegisterRequest>({
@@ -94,6 +104,20 @@ export const authApi = api.injectEndpoints({
           console.error("Login failed:", err);
         }
       },
+    }),
+    forgotPassword: builder.mutation<{ message: string }, ForgotPasswordRequest>({
+      query: (data) => ({
+        url: "/api/v1/auth/forgot-password",
+        method: "POST",
+        data,
+      }),
+    }),
+    resetPassword: builder.mutation<{ message: string }, ResetPasswordRequest>({
+      query: (data) => ({
+        url: "/api/v1/auth/reset-password",
+        method: "POST",
+        data,
+      }),
     }),
     refreshToken: builder.mutation<{ accessToken: string; refreshToken: string }, void>({
       query: () => ({
@@ -142,6 +166,8 @@ export const authApi = api.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
   useRefreshTokenMutation,
   useLogoutMutation,
 } = authApi;

@@ -6,16 +6,22 @@ export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Define public paths that don't require authentication
-  const isPublicPath = path === '/' || path === '/login' || path === '/register';
+  const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
+  const isPublicPath = publicPaths.includes(path);
 
-  // Define auth paths (login/register)
-  const isAuthPath = path === '/login' || path === '/register';
+  // Define auth paths (login/register/forgot/reset)
+  const isAuthPath = ['/login', '/register', '/forgot-password', '/reset-password'].includes(path);
 
   // 1. If the user is NOT authenticated and tries to access a protected path,
   // redirect them to the login page.
-  // Note: We check if it's NOT a public path.
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  // 2. If the user IS authenticated and tries to access an auth path,
+  // redirect them to the dashboard.
+  if (token && isAuthPath) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next();

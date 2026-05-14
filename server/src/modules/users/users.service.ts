@@ -24,7 +24,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepo.findOneBy({ email });
+    return this.usersRepo.findOne({ where: { email: ILike(email) } });
   }
 
   async findByUsername(username: string): Promise<User | null> {

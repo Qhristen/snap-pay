@@ -3,6 +3,8 @@ import {
   Injectable,
   UnauthorizedException,
   Inject,
+  BadRequestException,
+  NotFoundException,
 } from "@nestjs/common";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import type { Cache } from "cache-manager";
@@ -15,7 +17,12 @@ import { DataSource } from "typeorm";
 import { User } from "../users/entities/user.entity";
 import { UsersService } from "../users/users.service";
 import { Wallet } from "../wallet/entities/wallet.entity";
-import { LoginDto, RegisterDto } from "./dto/auth.dto";
+import {
+  LoginDto,
+  RegisterDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from "./dto/auth.dto";
 import { AuditService } from "../audit/audit.service";
 
 @Injectable()
@@ -149,6 +156,60 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async requestPasswordReset(dto: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    // Don't leak user existence
+    if (!user) {
+      return {
+        message:
+          "If an account exists with this email, a reset code has been sent.",
+      };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const ttl = 15 * 60; // 15 minutes
+
+    await this.cacheManager.set(
+      `password_reset:${dto.email}`,
+      otp,
+      ttl * 1000,
+    );
+
+    await this.mailQueue.add("send-reset-email", {
+      email: dto.email,
+      type: "PASSWORD_RESET",
+      data: { otp, username: user.username, fullName: user.fullName },
+    });
+
+    return {
+      message:
+        "If an account exists with this email, a reset code has been sent.",
+    };
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    const storedOtp = await this.cacheManager.get(
+      `password_reset:${dto.email}`,
+    );
+    if (!storedOtp || storedOtp !== dto.otp) {
+      throw new BadRequestException("Invalid or expired reset code");
+    }
+
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    const passwordHash = await bcrypt.hash(dto.password, 12);
+    await this.usersService.update(user.id, { passwordHash });
+
+    await this.cacheManager.del(`password_reset:${dto.email}`);
+
+    await this.auditService.log(user, "PASSWORD_RESET", "User", user.id);
+
+    return { message: "Password updated successfully" };
   }
 
   async refresh(refreshToken: string) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, Query } from "@nestjs/common";
+import { Controller, Get, Patch, Body, Query, NotFoundException } from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
@@ -68,6 +68,10 @@ export class UsersController {
   @ApiNotFoundResponse({ description: "User with this email not found" })
   @ApiUnauthorizedResponse({ description: "Missing or invalid access token" })
   async getUserByEmail(@Query("email") email: string) {
-    return this.usersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    return user;
   }
 }

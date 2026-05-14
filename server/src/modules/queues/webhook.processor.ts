@@ -1,8 +1,10 @@
-import { Processor, WorkerHost, OnWorkerEvent } from "@nestjs/bullmq";
-import { Job } from "bullmq";
+import { Processor, WorkerHost, OnWorkerEvent, InjectQueue } from "@nestjs/bullmq";
+import { Job, Queue } from "bullmq";
 import { Logger } from "@nestjs/common";
 import { WalletService } from "../wallet/wallet.service";
 import { TransactionStatus, TransactionType } from "../../common/enums";
+import { NotificationType } from "../notifications/entities/notification.entity";
+import Decimal from "decimal.js";
 
 interface PaystackWebhookEvent {
   event: string;
@@ -22,7 +24,11 @@ interface PaystackWebhookEvent {
 export class WebhookProcessor extends WorkerHost {
   private readonly logger = new Logger(WebhookProcessor.name);
 
-  constructor(private readonly walletService: WalletService) {
+  constructor(
+    private readonly walletService: WalletService,
+    @InjectQueue("notification-processing")
+    private readonly notificationQueue: Queue,
+  ) {
     super();
   }
 
@@ -108,6 +114,14 @@ export class WebhookProcessor extends WorkerHost {
         reference,
       );
 
+      // Queue notification
+      await this.notificationQueue.add("send-notification", {
+        userId,
+        title: "Wallet Funded",
+        message: `Your wallet has been credited with ₦${amountInNaira.toLocaleString()}`,
+        type: NotificationType.TRANSACTION,
+      });
+
       this.logger.log(
         `Successfully credited ₦${amountInNaira.toLocaleString()} to user ${userId} for reference ${reference}`,
       );
@@ -128,6 +142,18 @@ export class WebhookProcessor extends WorkerHost {
     }
 
     await this.walletService.confirmWithdrawal(reference);
+
+    // Queue notification
+    if (existingTransaction) {
+      const amount = new Decimal(existingTransaction.amount).dividedBy(100).toNumber();
+      await this.notificationQueue.add("send-notification", {
+        userId: existingTransaction.userId,
+        title: "Withdrawal Successful",
+        message: `Your withdrawal of ₦${amount.toLocaleString()} was successful`,
+        type: NotificationType.TRANSACTION,
+      });
+    }
+
     this.logger.log(`Transfer ${reference} confirmed successfully`);
   }
 
@@ -145,6 +171,18 @@ export class WebhookProcessor extends WorkerHost {
     }
 
     await this.walletService.reverseWithdrawal(reference);
+
+    // Queue notification
+    if (existingTransaction) {
+      const amount = new Decimal(existingTransaction.amount).dividedBy(100).toNumber();
+      await this.notificationQueue.add("send-notification", {
+        userId: existingTransaction.userId,
+        title: "Withdrawal Failed",
+        message: `Your withdrawal of ₦${amount.toLocaleString()} failed and has been reversed to your wallet`,
+        type: NotificationType.TRANSACTION,
+      });
+    }
+
     this.logger.log(
       `Transfer ${reference} failed, funds reversed to user wallet`,
     );

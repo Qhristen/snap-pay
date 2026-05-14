@@ -17,7 +17,13 @@ import {
   ApiBearerAuth,
 } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
-import { RegisterDto, LoginDto, AuthResponseDto } from "./dto/auth.dto";
+import {
+  ForgotPasswordDto,
+  ResetPasswordDto,
+  RegisterDto,
+  LoginDto,
+  AuthResponseDto,
+} from "./dto/auth.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { Public } from "../../common/decorators/public.decorator";
 
@@ -59,6 +65,24 @@ export class AuthController {
   }
 
   @Public()
+  @Post("forgot-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Request password reset" })
+  @ApiOkResponse({ description: "Reset code sent if email exists" })
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.requestPasswordReset(dto);
+  }
+
+  @Public()
+  @Post("reset-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Reset password with OTP" })
+  @ApiOkResponse({ description: "Password successfully updated" })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
+  }
+
+  @Public()
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -86,3 +110,4 @@ export class AuthController {
     return { message: "Logged out successfully" };
   }
 }
+
