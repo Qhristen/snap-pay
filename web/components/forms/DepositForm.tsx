@@ -45,6 +45,7 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
       if (result.data?.authorizationUrl) {
         toast.success('Opening Paystack in a new tab...');
         window.open(result.data.authorizationUrl, '_blank');
+        onSuccess?.();
       } else {
         toast.error('Could not initialize payment. Please try again.');
       }
