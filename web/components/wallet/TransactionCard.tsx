@@ -7,7 +7,8 @@ import {
   ArrowUpRight, 
   Send, 
   Wallet,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Clock
 } from 'lucide-react';
 
 interface TransactionCardProps {
@@ -39,12 +40,19 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
     >
       <div className="flex items-center gap-5">
         <div className={cn(
-          "flex h-12 w-12 items-center justify-center border border-white/5 transition-transform group-hover:scale-110",
-          isCredit ? "bg-success/10 text-success" : "bg-white/5 text-white"
+          "flex h-12 w-12 items-center justify-center border transition-transform group-hover:scale-110",
+          status === 'pending' ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" :
+          isCredit ? "bg-success/10 text-success border-white/5" : "bg-white/5 text-white border-white/5"
         )}>
-          {(type === 'deposit' || type === 'transfer_received') && <ArrowDownLeft className="h-6 w-6" />}
-          {(type === 'withdrawal' || type === 'transfer_sent') && <ArrowUpRight className="h-6 w-6" />}
-          {type === 'transfer' && <ArrowRightLeft className="h-6 w-6" />}
+          {status === 'pending' ? (
+            <Clock className="h-6 w-6" />
+          ) : (
+            <>
+              {(type === 'deposit' || type === 'transfer_received') && <ArrowDownLeft className="h-6 w-6" />}
+              {(type === 'withdrawal' || type === 'transfer_sent') && <ArrowUpRight className="h-6 w-6" />}
+              {type === 'transfer' && <ArrowRightLeft className="h-6 w-6" />}
+            </>
+          )}
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -52,7 +60,12 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
               {transaction.description || transaction.type.replace('_', ' ')}
             </p>
             {status !== 'successful' && (
-              <span className="rounded-full bg-white/5 px-2 py-0.5 text-[8px] font-bold uppercase text-white/40 border border-white/5">
+              <span className={cn(
+                "rounded-full px-2 py-0.5 text-[8px] font-bold uppercase border",
+                status === 'pending'
+                  ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                  : "bg-white/5 text-white/40 border-white/5"
+              )}>
                 {status}
               </span>
             )}

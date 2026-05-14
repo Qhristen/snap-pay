@@ -70,6 +70,9 @@ export class WebhookController {
     // If the body is completely empty, default to an empty string to prevent crypto crashes.
     const rawBody = req.rawBody ? req.rawBody.toString() : (body ? JSON.stringify(body) : "");
 
+    console.log(rawBody, "rawBody")
+    console.log(signature, "signature")
+    
     if (!this.paystackService.verifyWebhookSignature(rawBody, signature)) {
       this.logger.warn("Invalid Paystack webhook signature");
       throw new UnauthorizedException("Invalid signature");
