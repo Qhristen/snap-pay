@@ -79,7 +79,7 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
     return (
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-bold text-white mb-1">Add Bank Account</h3>
+          <h3 className="text-lg font-bold text-foreground mb-1">Add Bank Account</h3>
           <p className="text-sm text-muted-foreground">Link your Nigerian bank account to withdraw funds.</p>
         </div>
         <AddBankAccountForm 
@@ -92,9 +92,9 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/5 border border-white/5 p-4">
+      <div className="bg-foreground/5 border border-border p-4">
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available Balance</p>
-        <p className="text-2xl font-mono font-bold text-white mt-1">{formatCurrency(balance)}</p>
+        <p className="text-2xl font-mono font-bold text-foreground mt-1">{formatCurrency(balance)}</p>
       </div>
 
       <div className="space-y-3">
@@ -117,15 +117,15 @@ export function WithdrawForm({ onSuccess }: WithdrawFormProps) {
               className={`p-4 border cursor-pointer transition-all flex items-center justify-between ${
                 selectedBankAccountId === account.id
                   ? 'bg-primary/5 border-primary'
-                  : 'bg-white/5 border-white/10 hover:border-white/20'
+                  : 'bg-foreground/5 border-border hover:border-border'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full ${selectedBankAccountId === account.id ? 'bg-primary/20 text-primary' : 'bg-white/10 text-muted-foreground'}`}>
+                <div className={`p-2 rounded-full ${selectedBankAccountId === account.id ? 'bg-primary/20 text-primary' : 'bg-foreground/10 text-muted-foreground'}`}>
                   <Landmark className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{account.bankName}</p>
+                  <p className="text-sm font-bold text-foreground">{account.bankName}</p>
                   <p className="text-xs font-mono text-muted-foreground">{account.accountNumber} • {account.accountName}</p>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 import { useAppSelector } from '@/hooks/useAppSelector';
 
@@ -30,13 +31,14 @@ export function Navbar() {
           
           {/* <div className="hidden md:flex items-center gap-8">
             {['Features', 'How It Works', 'Security', 'Testimonials'].map((item) => (
-              <Link key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-medium text-white/40 transition-colors hover:text-primary">
+              <Link key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-medium text-foreground/40 transition-colors hover:text-primary">
                 {item}
               </Link>
             ))}
           </div> */}
 
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             {token ? (
               <Link href="/dashboard">
                 <Button className="bg-primary text-background hover:bg-gold-glow font-bold">Dashboard</Button>
@@ -44,7 +46,7 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-muted-foreground hover:text-white">Log In</Button>
+                  <Button variant="ghost" className="text-muted-foreground hover:text-foreground">Log In</Button>
                 </Link>
                 <Link href="/register">
                   <Button className="bg-primary text-background hover:bg-gold-glow font-bold">Get Started</Button>
@@ -53,9 +55,12 @@ export function Navbar() {
             )}
           </div>
 
-          <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          <div className="md:hidden flex items-center gap-4 text-foreground">
+            <ThemeToggle />
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -74,7 +79,7 @@ export function Navbar() {
                   {item}
                 </Link>
               ))}
-              <hr className="border-white/5" />
+              <hr className="border-border" />
               {token ? (
                 <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button className="w-full bg-primary text-background font-bold">Go to Dashboard</Button>

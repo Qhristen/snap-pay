@@ -36,13 +36,13 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="flex items-center justify-between cursor-pointer p-6 transition-all hover:bg-white/[0.02] group"
+      className="flex items-center justify-between cursor-pointer p-6 transition-all hover:bg-foreground/[0.02] group"
     >
       <div className="flex items-center gap-5">
         <div className={cn(
           "flex h-12 w-12 items-center justify-center border transition-transform group-hover:scale-110",
           status === 'pending' ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" :
-          isCredit ? "bg-success/10 text-success border-white/5" : "bg-white/5 text-white border-white/5"
+          isCredit ? "bg-success/10 text-success border-border" : "bg-foreground/5 text-foreground border-border"
         )}>
           {status === 'pending' ? (
             <Clock className="h-6 w-6" />
@@ -56,7 +56,7 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-bold tracking-tight text-white">
+            <p className="text-sm font-bold tracking-tight text-foreground">
               {transaction.description || transaction.type.replace('_', ' ')}
             </p>
             {status !== 'successful' && (
@@ -64,13 +64,13 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
                 "rounded-full px-2 py-0.5 text-[8px] font-bold uppercase border",
                 status === 'pending'
                   ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-                  : "bg-white/5 text-white/40 border-white/5"
+                  : "bg-foreground/5 text-foreground/40 border-border"
               )}>
                 {status}
               </span>
             )}
           </div>
-          <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">
+          <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mt-1">
             {new Date(transaction.createdAt).toLocaleDateString(undefined, {
               month: 'short',
               day: 'numeric',
@@ -83,11 +83,11 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
       <div className="text-right">
         <p className={cn(
           "text-base font-mono font-bold tracking-tighter",
-          isCredit ? "text-success" : "text-white",
+          isCredit ? "text-success" : "text-foreground",
         )}>
           {isCredit ? '+' : '-'}{formatCurrency(amount)}
         </p>
-        <p className="text-[9px] text-white/20 font-mono mt-1">Ref: {transaction.id.slice(0, 8)}</p>
+        <p className="text-[9px] text-foreground/20 font-mono mt-1">Ref: {transaction.id.slice(0, 8)}</p>
       </div>
     </motion.div>
   );

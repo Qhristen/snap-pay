@@ -105,12 +105,12 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
         <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Select Bank</label>
         <div className="relative">
           <div 
-            className="w-full h-14 bg-white/5 border border-white/10 px-4 flex items-center justify-between cursor-pointer hover:bg-white/10 transition-all rounded-none"
+            className="w-full h-14 bg-foreground/5 border border-border px-4 flex items-center justify-between cursor-pointer hover:bg-foreground/10 transition-all rounded-none"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="flex items-center gap-3">
               <Landmark className="w-5 h-5 text-primary" />
-              <span className={selectedBank ? 'text-white' : 'text-muted-foreground'}>
+              <span className={selectedBank ? 'text-foreground' : 'text-muted-foreground'}>
                 {selectedBank ? selectedBank.name : 'Choose a bank'}
               </span>
             </div>
@@ -118,12 +118,12 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
           </div>
 
           {isDropdownOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-[#0A0A0A] border border-white/10 shadow-2xl max-h-60 overflow-y-auto">
-              <div className="p-2 sticky top-0 bg-[#0A0A0A] border-b border-white/5">
+            <div className="absolute z-50 w-full mt-1 bg-[#0A0A0A] border border-border shadow-2xl max-h-60 overflow-y-auto">
+              <div className="p-2 sticky top-0 bg-[#0A0A0A] border-b border-border">
                 <input
                   type="text"
                   placeholder="Search banks..."
-                  className="w-full bg-white/5 border-none px-3 py-2 text-sm text-white focus:ring-1 focus:ring-primary outline-none"
+                  className="w-full bg-foreground/5 border-none px-3 py-2 text-sm text-foreground focus:ring-1 focus:ring-primary outline-none"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
@@ -132,7 +132,7 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
               {filteredBanks.map((bank, i) => (
                 <div
                   key={i}
-                  className="px-4 py-3 hover:bg-primary/10 cursor-pointer text-sm text-white flex items-center justify-between"
+                  className="px-4 py-3 hover:bg-primary/10 cursor-pointer text-sm text-foreground flex items-center justify-between"
                   onClick={() => {
                     setValue('bankCode', bank.code);
                     setIsDropdownOpen(false);
@@ -168,7 +168,7 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
           <CheckCircle2 className="w-5 h-5 text-primary mt-0.5" />
           <div>
             <p className="text-xs font-bold text-primary uppercase tracking-widest">Account Verified</p>
-            <p className="text-lg font-mono font-bold text-white mt-1">{accountName}</p>
+            <p className="text-lg font-mono font-bold text-foreground mt-1">{accountName}</p>
           </div>
         </div>
       )}
@@ -185,7 +185,7 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
 
       <div className="flex gap-4">
         {onCancel && (
-          <Button type="button" variant="outline" className="flex-1 h-14 border-white/10" onClick={onCancel}>
+          <Button type="button" variant="outline" className="flex-1 h-14 border-border" onClick={onCancel}>
             Cancel
           </Button>
         )}

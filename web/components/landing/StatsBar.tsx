@@ -15,14 +15,14 @@ const StatCounter = ({ value, label }: { value: string, label: string }) => {
       className="flex flex-col items-center justify-center p-6 text-center"
     >
       <span className="font-mono text-3xl font-bold text-primary md:text-4xl">{value}</span>
-      <span className="mt-2 text-sm text-white/40 uppercase tracking-widest">{label}</span>
+      <span className="mt-2 text-sm text-foreground/40 uppercase tracking-widest">{label}</span>
     </motion.div>
   );
 };
 
 export function StatsBar() {
   return (
-    <section className="border-y border-white/5 bg-surface/50 py-12">
+    <section className="border-y border-border bg-surface/50 py-12">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <StatCounter value="50,000+" label="Active Users" />

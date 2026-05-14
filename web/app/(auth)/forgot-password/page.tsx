@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
         <div className="absolute top-12 left-12">
             <Link href="/" className="flex items-center gap-2">
                 <Zap className="h-8 w-8 text-primary fill-primary" />
-                <span className="font-sora text-2xl font-extrabold text-white">SnapPay</span>
+                <span className="font-sora text-2xl font-extrabold text-foreground">SnapPay</span>
             </Link>
         </div>
 
@@ -60,8 +60,8 @@ export default function ForgotPasswordPage() {
           {!isSent ? (
             <>
               <div className="mb-10 text-center">
-                <h1 className="font-sora text-4xl font-bold text-white tracking-tight">Forgot Password?</h1>
-                <p className="mt-4 text-white/40 font-medium">Enter your email and we'll send you a code to reset your password.</p>
+                <h1 className="font-sora text-4xl font-bold text-foreground tracking-tight">Forgot Password?</h1>
+                <p className="mt-4 text-foreground/40 font-medium">Enter your email and we'll send you a code to reset your password.</p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
                   label="Email Address"
                   placeholder="name@example.com"
                   error={errors.email?.message}
-                  className="h-14 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-lg"
+                  className="h-14 bg-foreground/5 border-border focus:border-primary/50 transition-all text-lg"
                   {...register('email')}
                 />
 
@@ -88,9 +88,9 @@ export default function ForgotPasswordPage() {
                 <Mail className="h-10 w-10 text-primary" />
               </div>
               <div className="space-y-2">
-                <h1 className="font-sora text-3xl font-bold text-white">Check your email</h1>
-                <p className="text-white/40 font-medium">
-                  We've sent a 6-digit reset code to <span className="text-white">{email}</span>.
+                <h1 className="font-sora text-3xl font-bold text-foreground">Check your email</h1>
+                <p className="text-foreground/40 font-medium">
+                  We've sent a 6-digit reset code to <span className="text-foreground">{email}</span>.
                 </p>
               </div>
               <Link 
@@ -101,14 +101,14 @@ export default function ForgotPasswordPage() {
               </Link>
               <button 
                 onClick={() => setIsSent(false)}
-                className="text-white/40 hover:text-white font-bold transition-colors"
+                className="text-foreground/40 hover:text-foreground font-bold transition-colors"
               >
                 Didn't receive the email? Try again
               </button>
             </div>
           )}
 
-          <Link href="/login" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-white/20 hover:text-white/60 transition-colors uppercase tracking-[0.2em]">
+          <Link href="/login" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-foreground/20 hover:text-foreground/60 transition-colors uppercase tracking-[0.2em]">
              <ChevronLeft size={14} /> Back to Login
           </Link>
         </motion.div>

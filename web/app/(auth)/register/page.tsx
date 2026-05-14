@@ -60,21 +60,21 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen bg-background overflow-hidden">
       {/* Left Side: Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden flex-col justify-between p-36 mb-20">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-surface overflow-hidden flex-col justify-between p-36 mb-20">
         {/* Background Mesh/Glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#D4AF3715_0%,transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,#7C3AED10_0%,transparent_50%)]" />
         
         <Link href="/" className="relative z-10 flex items-center gap-2 group max-w-fit">
           <Zap className="h-10 w-10 text-primary fill-primary group-hover:scale-110 transition-transform" />
-          <span className="font-sora text-3xl font-extrabold tracking-tighter text-white">SnapPay</span>
+          <span className="font-sora text-3xl font-extrabold tracking-tighter text-foreground">SnapPay</span>
         </Link>
 
         <div className="relative z-10 space-y-6">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-sora font-extrabold text-white leading-tight max-w-xl"
+            className="text-5xl font-sora font-extrabold text-foreground leading-tight max-w-xl"
           >
             Start Your <span className="text-primary italic">Financial Journey</span> with Us.
           </motion.h2>
@@ -82,7 +82,7 @@ export default function RegisterPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-white/40 max-w-md"
+            className="text-lg text-muted-foreground max-w-md"
           >
             Join thousands of users who trust SnapPay for their daily transactions and wealth management.
           </motion.p>
@@ -96,7 +96,7 @@ export default function RegisterPage() {
         <div className="lg:hidden absolute top-12 left-12">
             <Link href="/" className="flex items-center gap-2">
                 <Zap className="h-8 w-8 text-primary fill-primary" />
-                <span className="font-sora text-2xl font-extrabold text-white">SnapPay</span>
+                <span className="font-sora text-2xl font-extrabold text-foreground">SnapPay</span>
             </Link>
         </div>
 
@@ -106,8 +106,8 @@ export default function RegisterPage() {
           className="w-full max-w-md mx-auto pt-20 lg:pt-0"
         >
           <div className="mb-10">
-            <h1 className="font-sora text-4xl font-bold text-white tracking-tight">Create Account</h1>
-            <p className="mt-4 text-white/40 font-medium">Join SnapPay today and experience the future of banking.</p>
+            <h1 className="font-sora text-4xl font-bold text-foreground tracking-tight">Create Account</h1>
+            <p className="mt-4 text-foreground/40 font-medium">Join SnapPay today and experience the future of banking.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -115,21 +115,21 @@ export default function RegisterPage() {
               label="Full Name"
               placeholder="John Doe"
               error={errors.fullName?.message}
-              className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-all"
+              className="h-12 bg-foreground/5 border-border focus:border-primary/50 transition-all"
               {...register('fullName')}
             />
             <Input
               label="Username"
               placeholder="johndoe"
               error={errors.username?.message}
-              className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-all"
+              className="h-12 bg-foreground/5 border-border focus:border-primary/50 transition-all"
               {...register('username')}
             />
             <Input
               label="Email Address"
               placeholder="name@example.com"
               error={errors.email?.message}
-              className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-all"
+              className="h-12 bg-foreground/5 border-border focus:border-primary/50 transition-all"
               {...register('email')}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -138,7 +138,7 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="••••••••"
                 error={errors.password?.message}
-                className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-all"
+                className="h-12 bg-foreground/5 border-border focus:border-primary/50 transition-all"
                 {...register('password')}
               />
               <Input
@@ -146,7 +146,7 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="••••••••"
                 error={errors.confirmPassword?.message}
-                className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-all"
+                className="h-12 bg-foreground/5 border-border focus:border-primary/50 transition-all"
                 {...register('confirmPassword')}
               />
             </div>
@@ -163,15 +163,15 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-10 text-center">
-            <p className="text-white/40 font-medium">
+            <p className="text-foreground/40 font-medium">
               Already have an account?{' '}
-              <Link href="/login" className="text-white font-bold hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">
+              <Link href="/login" className="text-foreground font-bold hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">
                 Sign in instead
               </Link>
             </p>
           </div>
 
-          <Link href="/" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-white/20 hover:text-white/60 transition-colors uppercase tracking-[0.2em]">
+          <Link href="/" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-foreground/20 hover:text-foreground/60 transition-colors uppercase tracking-[0.2em]">
              <ChevronLeft size={14} /> Return to Home
           </Link>
         </motion.div>

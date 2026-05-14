@@ -12,8 +12,8 @@ const Step = ({ number, title, description, index }: { number: string, title: st
       className="relative flex flex-col items-center text-center md:items-start md:text-left"
     >
       <span className="font-mono text-5xl font-bold text-primary/20 mb-4 md:text-6xl">{number}</span>
-      <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/40">{description}</p>
+      <h3 className="text-2xl font-bold text-foreground mb-2">{title}</h3>
+      <p className="text-foreground/40">{description}</p>
     </motion.div>
   );
 };
@@ -26,7 +26,7 @@ export function HowItWorks() {
       
       <div className="mx-auto max-w-7xl px-6 relative z-10">
         <div className="mb-16 text-center">
-          <h2 className="font-sora text-4xl font-bold text-white md:text-5xl">Up and running in 60 seconds.</h2>
+          <h2 className="font-sora text-4xl font-bold text-foreground md:text-5xl">Up and running in 60 seconds.</h2>
         </div>
 
         <div className="grid gap-12 md:grid-cols-3">

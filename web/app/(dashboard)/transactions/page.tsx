@@ -29,9 +29,9 @@ export default function TransactionsPage() {
       <div className='flex items-center justify-between'>
         <div>
           <h1 className="text-3xl font-bold">Transaction History</h1>
-          <p className="text-white/40">Keep track of all your financial activities.</p>
+          <p className="text-foreground/40">Keep track of all your financial activities.</p>
         </div>
-        <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
+        <Link href="/dashboard" className="h-10 w-10 flex items-center justify-center bg-surface border border-border text-foreground/40 hover:text-foreground transition-colors">
           <LayoutDashboard size={18} />
         </Link>
       </div>
@@ -58,12 +58,12 @@ export default function TransactionsPage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center p-12">
              <div className="h-8 w-8 border-2 border-primary border-t-transparent animate-spin" />
-            <div className="p-12 text-center text-white/40">Loading transactions...</div>
+            <div className="p-12 text-center text-foreground/40">Loading transactions...</div>
             </div>
           ) : transactions.length === 0 ? (
-            <div className="p-12 text-center text-white/40">No transactions found</div>
+            <div className="p-12 text-center text-foreground/40">No transactions found</div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {transactions.map((tx: any, index: number) => (
                 <TransactionCard key={tx.id} transaction={tx} index={index} />
               ))}
@@ -73,9 +73,9 @@ export default function TransactionsPage() {
       </Card>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-white/5 pt-6">
-          <p className="text-xs text-white/40">
-            Showing page <span className="text-white font-bold">{page}</span> of <span className="text-white font-bold">{totalPages}</span>
+        <div className="flex items-center justify-between border-t border-border pt-6">
+          <p className="text-xs text-foreground/40">
+            Showing page <span className="text-foreground font-bold">{page}</span> of <span className="text-foreground font-bold">{totalPages}</span>
           </p>
           <div className="flex items-center gap-1">
             <Button
@@ -83,7 +83,7 @@ export default function TransactionsPage() {
               size="sm"
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
-              className="h-8 w-8 p-0 border-white/5 bg-white/5 hover:bg-white/10"
+              className="h-8 w-8 p-0 border-border bg-foreground/5 hover:bg-foreground/10"
             >
               <span className="sr-only">Previous</span>
               &larr;
@@ -94,7 +94,7 @@ export default function TransactionsPage() {
               .map((p, i, arr) => (
                 <div key={p} className="flex items-center">
                   {i > 0 && arr[i-1] !== p - 1 && (
-                    <span className="px-2 text-white/20 text-xs">...</span>
+                    <span className="px-2 text-foreground/20 text-xs">...</span>
                   )}
                   <Button
                     variant={page === p ? 'primary' : 'outline'}
@@ -102,7 +102,7 @@ export default function TransactionsPage() {
                     onClick={() => setPage(p)}
                     className={cn(
                       "h-8 w-8 p-0 text-xs font-bold",
-                      page === p ? "" : "border-white/5 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white"
+                      page === p ? "" : "border-border bg-foreground/5 hover:bg-foreground/10 text-foreground/40 hover:text-foreground"
                     )}
                   >
                     {p}
@@ -116,7 +116,7 @@ export default function TransactionsPage() {
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
-              className="h-8 w-8 p-0 border-white/5 bg-white/5 hover:bg-white/10"
+              className="h-8 w-8 p-0 border-border bg-foreground/5 hover:bg-foreground/10"
             >
               <span className="sr-only">Next</span>
               &rarr;

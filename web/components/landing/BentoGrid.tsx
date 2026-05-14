@@ -8,7 +8,7 @@ export function BentoGrid() {
     <section className="py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center">
-          <h2 className="font-sora text-4xl font-bold text-white md:text-5xl">Designed for clarity. Built for speed.</h2>
+          <h2 className="font-sora text-4xl font-bold text-foreground md:text-5xl">Designed for clarity. Built for speed.</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
@@ -23,9 +23,9 @@ export function BentoGrid() {
                  <div className="h-8 w-24 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">Live Updates</div>
                </div>
             </div>
-            <div className="rounded-2xl bg-background/50 border border-white/5 p-6 h-full overflow-hidden flex flex-col gap-6">
+            <div className="rounded-2xl bg-background/50 border border-border p-6 h-full overflow-hidden flex flex-col gap-6">
                {/* Balance Card Mock */}
-               <div className="relative overflow-hidden border border-white/5 bg-surface text-white rounded-xl flex-shrink-0">
+               <div className="relative overflow-hidden border border-border bg-surface text-foreground rounded-xl flex-shrink-0">
                  <div className="absolute top-0 right-0 p-6 opacity-5">
                    <Zap className="h-24 w-24 -rotate-12 fill-primary text-primary" />
                  </div>
@@ -35,11 +35,11 @@ export function BentoGrid() {
                      <div className="space-y-2">
                        <div className="flex items-center gap-2 text-muted-foreground">
                          <p className="text-[10px] font-bold uppercase tracking-widest">Available Balance</p>
-                         <div className="rounded-full bg-white/5 p-1">
+                         <div className="rounded-full bg-foreground/5 p-1">
                            <EyeOff size={12} />
                          </div>
                        </div>
-                       <h2 className="font-mono text-3xl font-bold tracking-tight text-white">₦ 248,500.00</h2>
+                       <h2 className="font-mono text-3xl font-bold tracking-tight text-foreground">₦ 248,500.00</h2>
                      </div>
 
                      <div className="hidden sm:flex items-center gap-2 rounded-2xl bg-primary/10 px-3 py-1.5 border border-primary/20 backdrop-blur-sm">
@@ -50,8 +50,8 @@ export function BentoGrid() {
 
                    <div className="mt-8 flex items-end justify-between gap-6">
                      <div className="space-y-1">
-                       <p className="text-[8px] font-bold text-white/40 uppercase tracking-widest">Account Holder</p>
-                       <p className="text-sm font-bold text-white tracking-tight">John Doe</p>
+                       <p className="text-[8px] font-bold text-foreground/40 uppercase tracking-widest">Account Holder</p>
+                       <p className="text-sm font-bold text-foreground tracking-tight">John Doe</p>
                      </div>
                      
                      <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export function BentoGrid() {
                              </div>
                            ))}
                         </div>
-                        <div className="h-6 w-px bg-white/10" />
+                        <div className="h-6 w-px bg-foreground/10" />
                         <div className="flex items-center gap-1.5 text-primary font-bold text-xs">
                            <TrendingUp size={12} />
                            <span>Premium</span>
@@ -76,18 +76,18 @@ export function BentoGrid() {
                <div className="grid grid-cols-4 gap-4 flex-shrink-0">
                  {[
                    { label: 'Deposit', icon: Plus, color: 'text-primary', bg: 'bg-primary/10' },
-                   { label: 'Transfer', icon: Send, color: 'text-white', bg: 'bg-white/5' },
-                   { label: 'Withdraw', icon: CreditCard, color: 'text-white', bg: 'bg-white/5' },
-                   { label: 'History', icon: History, color: 'text-white', bg: 'bg-white/5' },
+                   { label: 'Transfer', icon: Send, color: 'text-foreground', bg: 'bg-foreground/5' },
+                   { label: 'Withdraw', icon: CreditCard, color: 'text-foreground', bg: 'bg-foreground/5' },
+                   { label: 'History', icon: History, color: 'text-foreground', bg: 'bg-foreground/5' },
                  ].map((action) => (
                    <div
                      key={action.label}
-                     className="flex flex-col items-center gap-2 p-3 border border-white/5 bg-surface transition-all rounded-xl"
+                     className="flex flex-col items-center gap-2 p-3 border border-border bg-surface transition-all rounded-xl"
                    >
-                     <div className={`flex h-10 w-10 items-center justify-center ${action.bg} border border-white/5 rounded-xl`}>
+                     <div className={`flex h-10 w-10 items-center justify-center ${action.bg} border border-border rounded-xl`}>
                        <action.icon className={`h-4 w-4 ${action.color}`} />
                      </div>
-                     <span className="text-[10px] font-bold text-white/40 tracking-tight uppercase">{action.label}</span>
+                     <span className="text-[10px] font-bold text-foreground/40 tracking-tight uppercase">{action.label}</span>
                    </div>
                  ))}
                </div>
@@ -105,7 +105,7 @@ export function BentoGrid() {
               <span>02 Review</span>
               <span>03 Done</span>
             </div>
-            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+            <div className="h-1 w-full bg-foreground/5 rounded-full overflow-hidden">
                <div className="h-full w-1/3 bg-primary" />
             </div>
           </motion.div>
@@ -115,7 +115,7 @@ export function BentoGrid() {
             whileHover={{ y: -5 }}
             className="md:col-span-4 md:row-span-1 glass rounded-3xl p-8 flex flex-col justify-center cursor-pointer"
           >
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl animate-pulse">
+            <div className="flex items-center gap-4 bg-foreground/5 border border-border p-4 rounded-2xl animate-pulse">
               <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                 <Bell size={20} />
               </div>
@@ -137,13 +137,13 @@ export function BentoGrid() {
             </div>
             <div className="space-y-3">
                {[
-                 { name: 'Spotify', type: 'Sub', amount: '-₦4,500', color: 'text-white' },
+                 { name: 'Spotify', type: 'Sub', amount: '-₦4,500', color: 'text-foreground' },
                  { name: 'Freelance', type: 'Income', amount: '+₦120,000', color: 'text-success' },
-                 { name: 'Aisha', type: 'Sent', amount: '-₦12,000', color: 'text-white' }
+                 { name: 'Aisha', type: 'Sent', amount: '-₦12,000', color: 'text-foreground' }
                ].map((t, i) => (
                  <div key={i} className="flex justify-between items-center text-xs">
                     <span className="font-bold">{t.name}</span>
-                    <span className="text-muted-foreground px-2 py-0.5 rounded-full bg-white/5">{t.type}</span>
+                    <span className="text-muted-foreground px-2 py-0.5 rounded-full bg-foreground/5">{t.type}</span>
                     <span className={`font-mono font-bold ${t.color}`}>{t.amount}</span>
                  </div>
                ))}

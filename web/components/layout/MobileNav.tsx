@@ -33,12 +33,12 @@ export function MobileNav() {
 
   return (
     <>
-      <nav className="md:hidden fixed max-w-6xl mx-auto bottom-0 left-0 right-0 z-[100] flex h-20 items-center justify-around border-t border-white/5 bg-background/80 backdrop-blur-xl px-2">
+      <nav className="md:hidden fixed max-w-6xl mx-auto bottom-0 left-0 right-0 z-[100] flex h-20 items-center justify-around border-t border-border bg-background/80 backdrop-blur-xl px-2">
         <Link
           href="/dashboard"
           className={cn(
             'flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group',
-            pathname === '/dashboard' ? 'text-primary' : 'text-white/40 hover:text-white'
+            pathname === '/dashboard' ? 'text-primary' : 'text-foreground/40 hover:text-foreground'
           )}
         >
           {pathname === '/dashboard' && (
@@ -46,11 +46,11 @@ export function MobileNav() {
           )}
           <div className={cn(
             "p-2 transition-all",
-            pathname === '/dashboard' ? "bg-primary/10" : "group-hover:bg-white/5"
+            pathname === '/dashboard' ? "bg-primary/10" : "group-hover:bg-foreground/5"
           )}>
             <LayoutDashboard size={22} />
           </div>
-          <span className="text-[9px] font-bold uppercase text-white/40 tracking-tighter">Home</span>
+          <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">Home</span>
         </Link>
 
         {/* Notifications Button */}
@@ -58,7 +58,7 @@ export function MobileNav() {
           onClick={() => setIsNotificationsOpen(true)}
           className={cn(
             'flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group',
-            isNotificationsOpen ? 'text-primary' : 'text-white/40 hover:text-white'
+            isNotificationsOpen ? 'text-primary' : 'text-foreground/40 hover:text-foreground'
           )}
         >
           {isNotificationsOpen && (
@@ -66,7 +66,7 @@ export function MobileNav() {
           )}
           <div className={cn(
             "p-2 transition-all relative",
-            isNotificationsOpen ? "bg-primary/10" : "group-hover:bg-white/5"
+            isNotificationsOpen ? "bg-primary/10" : "group-hover:bg-foreground/5"
           )}>
             <Bell size={22} />
             {unreadCount > 0 && (
@@ -75,14 +75,14 @@ export function MobileNav() {
               </span>
             )}
           </div>
-          <span className="text-[9px] font-bold uppercase text-white/40 tracking-tighter">Alerts</span>
+          <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">Alerts</span>
         </button>
 
         <Link
           href="/transactions"
           className={cn(
             'flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group',
-            pathname === '/transactions' ? 'text-primary' : 'text-white/40 hover:text-white'
+            pathname === '/transactions' ? 'text-primary' : 'text-foreground/40 hover:text-foreground'
           )}
         >
           {pathname === '/transactions' && (
@@ -90,22 +90,22 @@ export function MobileNav() {
           )}
           <div className={cn(
             "p-2 transition-all",
-            pathname === '/transactions' ? "bg-primary/10" : "group-hover:bg-white/5"
+            pathname === '/transactions' ? "bg-primary/10" : "group-hover:bg-foreground/5"
           )}>
             <History size={22} />
           </div>
-          <span className="text-[9px] font-bold uppercase text-white/40 tracking-tighter">History</span>
+          <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">History</span>
         </Link>
 
         {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group text-white/40 hover:text-white"
+          className="flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group text-foreground/40 hover:text-foreground"
         >
-          <div className="p-2 transition-all group-hover:bg-white/5">
+          <div className="p-2 transition-all group-hover:bg-foreground/5">
             <LogOut size={22} />
           </div>
-          <span className="text-[9px] font-bold uppercase text-white/40 tracking-tighter">Logout</span>
+          <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">Logout</span>
         </button>
       </nav>
 

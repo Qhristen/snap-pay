@@ -10,8 +10,8 @@ const SecurityPoint = ({ icon: Icon, title, description }: { icon: React.Element
         <Icon size={20} />
       </div>
       <div>
-        <h4 className="font-bold text-white mb-1">{title}</h4>
-        <p className="text-white/40 text-sm">{description}</p>
+        <h4 className="font-bold text-foreground mb-1">{title}</h4>
+        <p className="text-foreground/40 text-sm">{description}</p>
       </div>
     </div>
   );
@@ -22,7 +22,7 @@ export function Security() {
     <section id="security" className="py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-16 items-center">
         <div>
-          <h2 className="font-sora text-4xl font-bold text-white md:text-5xl mb-12">Your money is safe with us.</h2>
+          <h2 className="font-sora text-4xl font-bold text-foreground md:text-5xl mb-12">Your money is safe with us.</h2>
           <div className="space-y-4">
             <SecurityPoint 
               icon={Lock} 

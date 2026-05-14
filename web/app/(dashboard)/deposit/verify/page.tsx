@@ -46,16 +46,16 @@ export default function DepositVerifyPage() {
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md bg-[#0A0A0A] border border-white/5 p-8 text-center space-y-6">
+      <div className="w-full max-w-md bg-[#0A0A0A] border border-border p-8 text-center space-y-6">
         {status === 'verifying' && (
           <>
             <div className="relative w-20 h-20 mx-auto">
               <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
               <Loader2 className="w-20 h-20 text-primary animate-spin" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Verifying Payment</h1>
-            <p className="text-white/40">{message}</p>
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Ref: {reference}</p>
+            <h1 className="text-2xl font-bold text-foreground">Verifying Payment</h1>
+            <p className="text-foreground/40">{message}</p>
+            <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest">Ref: {reference}</p>
           </>
         )}
 
@@ -64,8 +64,8 @@ export default function DepositVerifyPage() {
             <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Payment Successful</h1>
-            <p className="text-white/40">{message}</p>
+            <h1 className="text-2xl font-bold text-foreground">Payment Successful</h1>
+            <p className="text-foreground/40">{message}</p>
             <div className="pt-4">
               <Button 
                 onClick={() => router.push('/dashboard')}
@@ -82,19 +82,19 @@ export default function DepositVerifyPage() {
             <div className="w-20 h-20 bg-destructive/20 rounded-full flex items-center justify-center mx-auto">
               <XCircle className="w-10 h-10 text-destructive" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Payment Failed</h1>
-            <p className="text-white/40">{message}</p>
+            <h1 className="text-2xl font-bold text-foreground">Payment Failed</h1>
+            <p className="text-foreground/40">{message}</p>
             <div className="pt-4 flex flex-col gap-3">
               <Button 
                 onClick={() => router.push('/deposit')}
-                className="w-full h-14 bg-white/5 border border-white/10 text-white font-bold text-lg hover:bg-white/10"
+                className="w-full h-14 bg-foreground/5 border border-border text-foreground font-bold text-lg hover:bg-foreground/10"
               >
                 Try Again
               </Button>
               <Button 
                 variant="outline"
                 onClick={() => router.push('/dashboard')}
-                className="text-white/40 hover:text-white"
+                className="text-foreground/40 hover:text-foreground"
               >
                 Back to Dashboard
               </Button>

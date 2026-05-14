@@ -106,7 +106,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
         {[1, 2, 3].map((s) => (
           <div
             key={s}
-            className={`h-1 flex-1 transition-colors ${s <= step ? 'bg-primary' : 'bg-white/5'}`}
+            className={`h-1 flex-1 transition-colors ${s <= step ? 'bg-primary' : 'bg-foreground/5'}`}
           />
         ))}
       </div>
@@ -150,7 +150,7 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
                 <UserIcon className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate">{recipientName}</p>
+                <p className="text-sm font-bold text-foreground truncate">{recipientName}</p>
                 <p className="text-xs text-muted-foreground truncate">{recipientEmail}</p>
               </div>
               <button
@@ -200,20 +200,20 @@ export function TransferForm({ onSuccess }: TransferFormProps) {
           >
             <div className="space-y-2">
               <p className="text-muted-foreground text-sm">You are sending</p>
-              <h3 className="text-3xl font-mono font-bold text-white">{formatCurrency(Number(amount))}</h3>
+              <h3 className="text-3xl font-mono font-bold text-foreground">{formatCurrency(Number(amount))}</h3>
               <p className="text-muted-foreground text-sm">to</p>
-              <div className="flex items-center justify-center gap-2 font-bold text-white">
+              <div className="flex items-center justify-center gap-2 font-bold text-foreground">
                 <UserIcon className="h-5 w-5 text-primary" />
                 {recipientName}
               </div>
             </div>
 
-            <div className=" border border-white/5 bg-white/5 p-4 text-left text-sm space-y-2">
+            <div className=" border border-border bg-foreground/5 p-4 text-left text-sm space-y-2">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Transaction Fee</span>
                 <span className="font-bold text-success">Free</span>
               </div>
-              <div className="flex justify-between border-t border-white/5 pt-2 font-bold text-white">
+              <div className="flex justify-between border-t border-border pt-2 font-bold text-foreground">
                 <span>Total to debit</span>
                 <span>{formatCurrency(Number(amount))}</span>
               </div>

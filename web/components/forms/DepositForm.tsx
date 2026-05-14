@@ -71,7 +71,7 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
               key={preset}
               type="button"
               onClick={() => setValue('amount', preset.toString())}
-              className="py-2 bg-white/5 cursor-pointer border border-white/10 text-xs font-bold text-white hover:bg-primary/10 hover:border-primary/50 transition-all"
+              className="py-2 bg-foreground/5 cursor-pointer border border-border text-xs font-bold text-foreground hover:bg-primary/10 hover:border-primary/50 transition-all"
             >
               ₦{preset.toLocaleString()}
             </button>

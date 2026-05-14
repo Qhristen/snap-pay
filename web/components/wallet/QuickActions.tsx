@@ -13,9 +13,9 @@ type ModalType = 'deposit' | 'transfer' | 'withdraw' | null;
 
 const actions = [
   { label: 'Deposit', key: 'deposit' as const, icon: Plus, color: 'text-primary', bg: 'bg-primary/10' },
-  { label: 'Transfer', key: 'transfer' as const, icon: Send, color: 'text-white', bg: 'bg-white/5' },
-  { label: 'Withdraw', key: 'withdraw' as const, icon: CreditCard, color: 'text-white', bg: 'bg-white/5' },
-  { label: 'History', key: 'history' as const, icon: History, color: 'text-white', bg: 'bg-white/5' },
+  { label: 'Transfer', key: 'transfer' as const, icon: Send, color: 'text-foreground', bg: 'bg-foreground/5' },
+  { label: 'Withdraw', key: 'withdraw' as const, icon: CreditCard, color: 'text-foreground', bg: 'bg-foreground/5' },
+  { label: 'History', key: 'history' as const, icon: History, color: 'text-foreground', bg: 'bg-foreground/5' },
 ];
 
 export function QuickActions() {
@@ -36,22 +36,22 @@ export function QuickActions() {
             {action.key === 'history' ? (
               <Link
                 href="/transactions"
-                className="group flex flex-col items-center gap-3 p-4 border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer"
+                className="group flex flex-col items-center gap-3 p-4 border border-border bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer"
               >
-                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
+                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-border transition-transform group-hover:scale-110`}>
                   <action.icon className={`h-6 w-6 ${action.color}`} />
                 </div>
-                <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors tracking-tight uppercase">{action.label}</span>
+                <span className="text-xs font-bold text-foreground/40 group-hover:text-foreground transition-colors tracking-tight uppercase">{action.label}</span>
               </Link>
             ) : (
               <button
                 onClick={() => setActiveModal(action.key)}
-                className="group flex flex-col items-center gap-3 p-4 border border-white/5 bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer w-full"
+                className="group flex flex-col items-center gap-3 p-4 border border-border bg-surface transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 active:scale-95 cursor-pointer w-full"
               >
-                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-white/5 transition-transform group-hover:scale-110`}>
+                <div className={`flex h-14 w-14 items-center justify-center ${action.bg} border border-border transition-transform group-hover:scale-110`}>
                   <action.icon className={`h-6 w-6 ${action.color}`} />
                 </div>
-                <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors tracking-tight uppercase">{action.label}</span>
+                <span className="text-xs font-bold text-foreground/40 group-hover:text-foreground transition-colors tracking-tight uppercase">{action.label}</span>
               </button>
             )}
           </motion.div>

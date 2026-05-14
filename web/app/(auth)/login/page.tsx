@@ -47,21 +47,21 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen bg-background overflow-hidden">
       {/* Left Side: Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden flex-col justify-between p-36">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-surface overflow-hidden flex-col justify-between p-36">
         {/* Background Mesh/Glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#D4AF3715_0%,transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,#7C3AED10_0%,transparent_50%)]" />
         
         <Link href="/" className="relative z-10 flex items-center gap-2 group max-w-fit">
           <Zap className="h-10 w-10 text-primary fill-primary group-hover:scale-110 transition-transform" />
-          <span className="font-sora text-3xl font-extrabold tracking-tighter text-white">SnapPay</span>
+          <span className="font-sora text-3xl font-extrabold tracking-tighter text-foreground">SnapPay</span>
         </Link>
 
         <div className="relative z-10 space-y-6">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-sora font-extrabold text-white leading-tight max-w-xl"
+            className="text-5xl font-sora font-extrabold text-foreground leading-tight max-w-xl"
           >
             The Future of <span className="text-primary italic">Digital Banking</span> is Here.
           </motion.h2>
@@ -69,7 +69,7 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-white/40 max-w-md"
+            className="text-lg text-muted-foreground max-w-md"
           >
             Experience seamless transactions, instant notifications, and premium security designed for the modern world.
           </motion.p>
@@ -83,7 +83,7 @@ export default function LoginPage() {
         <div className="lg:hidden absolute top-12 left-12">
             <Link href="/" className="flex items-center gap-2">
                 <Zap className="h-8 w-8 text-primary fill-primary" />
-                <span className="font-sora text-2xl font-extrabold text-white">SnapPay</span>
+                <span className="font-sora text-2xl font-extrabold text-foreground">SnapPay</span>
             </Link>
         </div>
 
@@ -93,8 +93,8 @@ export default function LoginPage() {
           className="w-full max-w-md mx-auto"
         >
           <div className="mb-10">
-            <h1 className="font-sora text-4xl font-bold text-white tracking-tight">Welcome Back</h1>
-            <p className="mt-4 text-white/40 font-medium">Please enter your details to access your account.</p>
+            <h1 className="font-sora text-4xl font-bold text-foreground tracking-tight">Welcome Back</h1>
+            <p className="mt-4 text-foreground/40 font-medium">Please enter your details to access your account.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -103,7 +103,7 @@ export default function LoginPage() {
                 label="Email Address"
                 placeholder="name@example.com"
                 error={errors.email?.message}
-                className="h-14 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-lg"
+                className="h-14 bg-foreground/5 border-border focus:border-primary/50 transition-all text-lg"
                 {...register('email')}
               />
               
@@ -117,7 +117,7 @@ export default function LoginPage() {
                     Forgot Password?
                   </Link>
                 }
-                className="h-14 bg-white/5 border-white/10 focus:border-primary/50 transition-all text-lg"
+                className="h-14 bg-foreground/5 border-border focus:border-primary/50 transition-all text-lg"
                 {...register('password')}
               />
             </div>
@@ -132,15 +132,15 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-10 text-center">
-            <p className="text-white/40 font-medium">
+            <p className="text-foreground/40 font-medium">
               New to SnapPay?{' '}
-              <Link href="/register" className="text-white font-bold hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">
+              <Link href="/register" className="text-foreground font-bold hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">
                 Create an account
               </Link>
             </p>
           </div>
 
-          <Link href="/" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-white/20 hover:text-white/60 transition-colors uppercase tracking-[0.2em]">
+          <Link href="/" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-foreground/20 hover:text-foreground/60 transition-colors uppercase tracking-[0.2em]">
              <ChevronLeft size={14} /> Return to Home
           </Link>
         </motion.div>

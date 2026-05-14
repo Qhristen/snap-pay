@@ -17,7 +17,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
       {/* Background Glow */}
       <div className="absolute inset-0 bg-primary/20 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
-      <Card className="relative overflow-hidden border border-white/5 bg-surface text-white shadow-2xl transition-all duration-500 group-hover:border-primary/20">
+      <Card className="relative overflow-hidden border border-border bg-surface text-foreground transition-all duration-500 group-hover:border-primary/20">
         <div className="absolute top-0 right-0 p-8 opacity-5">
           <Zap className="h-32 w-32 -rotate-12 fill-primary text-primary" />
         </div>
@@ -25,11 +25,11 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
         <CardContent className="p-8 md:p-10">
           <div className="flex items-start justify-between">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-white/40">
+              <div className="flex items-center gap-2 text-foreground/40">
                 <p className="text-xs font-bold uppercase tracking-widest">Available Balance</p>
                 <button
                   onClick={() => setShowBalance(!showBalance)}
-                  className="bg-white/5 p-1.5 transition-hover hover:bg-white/10"
+                  className="bg-foreground/5 p-1.5 transition-hover hover:bg-foreground/10"
                 >
                   {showBalance ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
@@ -41,12 +41,12 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="font-mono text-4xl font-bold tracking-tight md:text-5xl text-white"
+                  className="font-mono text-4xl font-bold tracking-tight md:text-5xl text-foreground"
                 >
                   {isLoadingWallet ? (
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 border-2 border-primary border-t-transparent animate-spin" />
-                      <span className="text-white/40 text-sm font-medium">Syncing your wallet...</span>
+                      <span className="text-foreground/40 text-sm font-medium">Syncing your wallet...</span>
                     </div>
                   ) : (
                     formatCurrency(balance)
@@ -63,8 +63,8 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
 
           <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Account Holder</p>
-              <p className="text-lg font-bold text-white tracking-tight">{user?.fullName?.toUpperCase()}</p>
+              <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Account Holder</p>
+              <p className="text-lg font-bold text-foreground tracking-tight">{user?.fullName?.toUpperCase()}</p>
             </div>
             
             <div className="flex items-center gap-4">
@@ -75,7 +75,7 @@ export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
                     </div>
                   ))}
                </div>
-               <div className="h-8 w-px bg-white/10" />
+               <div className="h-8 w-px bg-foreground/10" />
                <div className="flex items-center gap-2 text-primary font-bold text-sm">
                   <TrendingUp size={16} />
                   <span>Premium Account</span>

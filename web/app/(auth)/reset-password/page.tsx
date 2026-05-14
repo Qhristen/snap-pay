@@ -71,8 +71,8 @@ function ResetPasswordForm() {
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
           <ShieldCheck className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="font-sora text-4xl font-bold text-white tracking-tight">Set New Password</h1>
-        <p className="mt-4 text-white/40 font-medium">Please enter the 6-digit code we sent and your new password.</p>
+        <h1 className="font-sora text-4xl font-bold text-foreground tracking-tight">Set New Password</h1>
+        <p className="mt-4 text-foreground/40 font-medium">Please enter the 6-digit code we sent and your new password.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -80,7 +80,7 @@ function ResetPasswordForm() {
           label="Email Address"
           placeholder="name@example.com"
           error={errors.email?.message}
-          className="h-12 bg-white/5 border-white/10"
+          className="h-12 bg-foreground/5 border-border"
           {...register('email')}
         />
 
@@ -89,7 +89,7 @@ function ResetPasswordForm() {
           placeholder="123456"
           maxLength={6}
           error={errors.otp?.message}
-          className="h-12 bg-white/5 border-white/10 font-mono tracking-[0.5em] text-center"
+          className="h-12 bg-foreground/5 border-border font-mono tracking-[0.5em] text-center"
           {...register('otp')}
         />
 
@@ -98,7 +98,7 @@ function ResetPasswordForm() {
           type="password"
           placeholder="••••••••"
           error={errors.password?.message}
-          className="h-12 bg-white/5 border-white/10"
+          className="h-12 bg-foreground/5 border-border"
           {...register('password')}
         />
 
@@ -107,7 +107,7 @@ function ResetPasswordForm() {
           type="password"
           placeholder="••••••••"
           error={errors.confirmPassword?.message}
-          className="h-12 bg-white/5 border-white/10"
+          className="h-12 bg-foreground/5 border-border"
           {...register('confirmPassword')}
         />
 
@@ -122,7 +122,7 @@ function ResetPasswordForm() {
         </div>
       </form>
 
-      <Link href="/forgot-password" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-white/20 hover:text-white/60 transition-colors uppercase tracking-[0.2em]">
+      <Link href="/forgot-password" className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-foreground/20 hover:text-foreground/60 transition-colors uppercase tracking-[0.2em]">
          <ChevronLeft size={14} /> Back to Request
       </Link>
     </motion.div>
@@ -136,11 +136,11 @@ export default function ResetPasswordPage() {
         <div className="absolute top-12 left-12">
             <Link href="/" className="flex items-center gap-2">
                 <Zap className="h-8 w-8 text-primary fill-primary" />
-                <span className="font-sora text-2xl font-extrabold text-white">SnapPay</span>
+                <span className="font-sora text-2xl font-extrabold text-foreground">SnapPay</span>
             </Link>
         </div>
 
-        <Suspense fallback={<div className="text-white text-center">Loading...</div>}>
+        <Suspense fallback={<div className="text-foreground text-center">Loading...</div>}>
           <ResetPasswordForm />
         </Suspense>
       </div>

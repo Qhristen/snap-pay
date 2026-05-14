@@ -16,7 +16,7 @@ export function NotificationBell() {
       <div className="relative hidden lg:block">
         <button
           onClick={() => setIsOpen(true)}
-          className="relative h-10 w-10 flex items-center cursor-pointer justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors group"
+          className="relative h-10 w-10 flex items-center cursor-pointer justify-center bg-surface border border-border text-foreground/40 hover:text-foreground transition-colors group"
         >
           <Bell size={18} className="group-hover:scale-110 transition-transform" />
           {unreadCount > 0 && (

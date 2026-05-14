@@ -35,12 +35,12 @@ export function Sidebar() {
   const [logoutApi] = useLogoutMutation();
 
   const handleLogout = async () => {
-    try { await logoutApi().unwrap(); } catch {}
+    try { await logoutApi().unwrap(); } catch { }
     window.location.href = '/login';
   };
 
   return (
-    <aside className="hidden h-screen w-72 flex-col border-r border-white/5 bg-background md:flex">
+    <aside className="hidden h-screen w-72 flex-col border-r border-border bg-background md:flex">
       <div className="flex h-24 items-center px-8">
         <Link href="/" className="flex items-center gap-3">
           <Zap className="h-8 w-8 text-primary fill-primary" />
@@ -58,9 +58,9 @@ export function Sidebar() {
               href={item.href}
               className={cn(
                 'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition-all group relative',
-                isActive 
-                  ? 'bg-surface text-primary border border-white/5 shadow-lg shadow-primary/5' 
-                  : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                isActive
+                  ? 'bg-surface text-primary border border-border shadow-lg shadow-primary/5'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
               )}
             >
               {isActive && <div className="absolute left-0 h-4 w-1 bg-primary rounded-r-full" />}
@@ -72,31 +72,31 @@ export function Sidebar() {
       </nav>
 
       <div className="p-6 space-y-6">
-        <div className="rounded-3xl border border-white/5 bg-surface p-4">
-           <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                <User size={20} />
-              </div>
-              <div className="flex flex-col overflow-hidden">
-                <span className="text-sm font-bold text-white truncate">{user?.fullName}</span>
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">{user?.email?.split('@')[0]}</span>
-              </div>
-           </div>
-           <div className="flex gap-2">
-              <button className="flex-1 h-9 rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all flex items-center justify-center">
-                 <Settings size={16} />
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="flex-1 h-9 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all flex items-center justify-center"
-              >
-                 <LogOut size={16} />
-              </button>
-           </div>
+        <div className="rounded-3xl border border-border bg-surface p-4">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <User size={20} />
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-sm font-bold text-foreground truncate">{user?.fullName}</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">{user?.email?.split('@')[0]}</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button className="flex-1 h-9 rounded-xl bg-foreground/5 border border-border text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-all flex items-center justify-center">
+              <Settings size={16} />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex-1 h-9 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all flex items-center justify-center"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center justify-center">
-           <ThemeToggle />
+          <ThemeToggle />
         </div>
       </div>
     </aside>
