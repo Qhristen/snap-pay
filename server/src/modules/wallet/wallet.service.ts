@@ -446,8 +446,6 @@ export class WalletService {
     userId: string,
     amount: number,
     reference: string,
-    type: TransactionType,
-    description?: string,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -465,14 +463,15 @@ export class WalletService {
       wallet.balance = new Decimal(wallet.balance).plus(amountKobo).toNumber();
       await queryRunner.manager.save(wallet);
 
-      const transaction = queryRunner.manager.create(Transaction, {
-        userId,
-        reference,
-        amount: amountKobo.toNumber(),
-        description: description || "Wallet credit",
-        status: TransactionStatus.SUCCESSFUL,
-        type,
+      let transaction = await queryRunner.manager.findOne(Transaction, {
+        where: { reference },
       });
+
+      if (!transaction) {
+        throw new NotFoundException("Transaction not found");
+      }
+      
+      transaction.status = TransactionStatus.SUCCESSFUL;
       await queryRunner.manager.save(transaction);
 
       await queryRunner.commitTransaction();

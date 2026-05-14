@@ -67,7 +67,7 @@ export default function DashboardPage() {
             <LayoutDashboard size={18} />
           </Link> */}
           <NotificationBell />
-          <button onClick={handleLogout} className="h-10 w-10 flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
+          <button onClick={handleLogout} className="h-10 w-10 cursor-pointer flex items-center justify-center bg-surface border border-white/5 text-white/40 hover:text-white transition-colors">
             <LogOut size={18} />
           </button>
         </div>

@@ -6,6 +6,7 @@ import { GatewayModule } from "../gateway/gateway.module";
 import { NotificationsModule } from "../notifications/notifications.module";
 import { TransactionsModule } from "../transactions/transactions.module";
 import { WalletModule } from "../wallet/wallet.module";
+import { PaymentModule } from "../payment/payment.module";
 import { AuditProcessor } from "./audit.processor";
 import { MailProcessor } from "./mail.processor";
 import { NotificationProcessor } from "./notification.processor";
@@ -27,6 +28,7 @@ import { WalletProcessor } from "./wallet.processor";
     AuditModule,
     GatewayModule,
     NotificationsModule,
+    PaymentModule,
   ],
   providers: [
     WithdrawalProcessor,

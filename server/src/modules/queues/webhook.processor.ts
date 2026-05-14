@@ -94,8 +94,6 @@ export class WebhookProcessor extends WorkerHost {
         userId,
         amount,
         reference,
-        TransactionType.DEPOSIT,
-        `Deposit via Paystack: ${reference}`,
       );
 
       this.logger.log(

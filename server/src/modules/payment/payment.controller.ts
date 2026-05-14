@@ -21,6 +21,7 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { User } from "../users/entities/user.entity";
 import { TransactionType } from "../../common/enums/transaction.enum";
 import { PaystackService } from "./paystack.service";
+import { PaymentService } from "./payment.service";
 import { WalletService } from "../wallet/wallet.service";
 import {
   InitializeFundingDto,
@@ -31,6 +32,7 @@ import {
   BankAccountResponseDto,
 } from "./dto";
 import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
+import { TransactionsService } from "../transactions/transactions.service";
 
 @ApiTags("Payment")
 @Controller("payment")
@@ -42,7 +44,9 @@ export class PaymentController {
 
   constructor(
     private readonly paystackService: PaystackService,
+    private readonly paymentService: PaymentService,
     private readonly walletService: WalletService,
+    private readonly transactionService: TransactionsService,
   ) {}
 
   @Get("banks")
@@ -127,24 +131,17 @@ export class PaymentController {
     @CurrentUser() user: User,
     @Body() dto: InitializeFundingDto,
   ) {
-    const reference = this.paystackService.generateReference("FUND");
-
-    const result = await this.paystackService.initializeTransaction(
-      user.email,
+    const result = await this.paymentService.initializeFunding(
+      user,
       dto.amount,
-      reference,
-      {
-        type: "wallet_funding",
-        userId: user.id,
-      },
       dto.callbackUrl,
     );
 
     return {
       success: true,
       data: {
-        authorizationUrl: result.authorization_url,
-        accessCode: result.access_code,
+        authorizationUrl: result.authorizationUrl,
+        accessCode: result.accessCode,
         reference: result.reference,
       },
       message: "Payment initialized successfully",
@@ -196,11 +193,7 @@ export class PaymentController {
     // Credit wallet (amount is in kobo, convert to naira)
     const amountInNaira = result.amount / 100;
 
-    const transaction = await this.walletService.creditWallet(
-      user.id,
-      amountInNaira,
-      dto.reference,
-      TransactionType.DEPOSIT,
+    const transaction = await this.walletService.getTransactionByReference(
       dto.reference,
     );
 
@@ -344,45 +337,25 @@ export class PaymentController {
 
     const reference = this.paystackService.generateReference("WD");
 
-    // Debit wallet first
-    await this.walletService.debitWallet(
-      user.id,
+    await this.paymentService.initiateWithdrawal(
+      user,
       dto.amount,
+      wallet.bankAccount.paystackRecipientCode,
       reference,
-      TransactionType.WITHDRAWAL,
     );
 
-    // Initiate transfer via Paystack
-    try {
-      const transfer = await this.paystackService.initiateTransfer(
-        wallet.bankAccount.paystackRecipientCode,
-        dto.amount,
+    const { balance } = await this.walletService.getBalance(user.id);
+
+    return {
+      success: true,
+      data: {
         reference,
-        "Wallet withdrawal",
-      );
-
-      const { balance } = await this.walletService.getBalance(user.id);
-
-      return {
-        success: true,
-        data: {
-          reference,
-          amount: dto.amount,
-          status: transfer.status,
-          balance,
-        },
-        message:
-          "Withdrawal initiated successfully. You will receive the funds shortly.",
-      };
-    } catch (error) {
-      // Reverse the debit if transfer initiation fails
-      await this.walletService.creditWallet(
-        user.id,
-        dto.amount,
-        `${reference}_reversal`,
-        TransactionType.DEPOSIT,
-      );
-      throw error;
-    }
+        amount: dto.amount,
+        status: "pending",
+        balance,
+      },
+      message:
+        "Withdrawal initiated successfully. You will receive the funds shortly.",
+    };
   }
 }
