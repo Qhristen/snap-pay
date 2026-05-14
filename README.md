@@ -28,12 +28,12 @@ SnapPay is organized as a monorepo containing both the high-performance backend 
 ### [🖥️ Server (Backend)](./server)
 The core engine built with **NestJS**, focusing on ACID-compliant financial logic and security.
 - **Tech Stack**: NestJS, PostgreSQL (TypeORM), Redis (BullMQ), Socket.io, Swagger.
-- **Documentation**: [Interactive API Docs](http://localhost:3001/docs)
+- **Documentation**: [Interactive API Docs](https://snap-pay-production.up.railway.app/docs)
 
 ### [🌐 Web (Frontend)](./web)
 A sleek, responsive dashboard built with **Next.js 14** for a premium user experience.
 - **Tech Stack**: Next.js 14, Tailwind CSS, RTK Query, Framer Motion, Socket.io Client.
-- **URL**: [SnapPay Dashboard](http://localhost:3000)
+- **URL**: [SnapPay Dashboard](https://snap-pay-ashy.vercel.app)
 
 ---
 
