@@ -28,13 +28,13 @@ export function Navbar() {
             <span className="font-sora text-2xl font-bold tracking-tighter">SnapPay</span>
           </Link>
           
-          <div className="hidden md:flex items-center gap-8">
+          {/* <div className="hidden md:flex items-center gap-8">
             {['Features', 'How It Works', 'Security', 'Testimonials'].map((item) => (
               <Link key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-medium text-white/40 transition-colors hover:text-primary">
                 {item}
               </Link>
             ))}
-          </div>
+          </div> */}
 
           <div className="hidden md:flex items-center gap-4">
             {token ? (

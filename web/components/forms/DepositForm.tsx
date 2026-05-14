@@ -43,9 +43,10 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
       }).unwrap();
 
       if (result.data?.authorizationUrl) {
-        toast.success('Opening Paystack in a new tab...');
-        window.open(result.data.authorizationUrl, '_blank');
-        onSuccess?.();
+        toast.success('Opening Payment gateway...');
+        window.location.href = result.data.authorizationUrl;
+        // window.open(result.data.authorizationUrl, '_blank');
+        // onSuccess?.();
       } else {
         toast.error('Could not initialize payment. Please try again.');
       }

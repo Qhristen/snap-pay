@@ -31,6 +31,7 @@ export class PaymentService {
   ) {
     const reference = this.paystackService.generateReference("FUND");
     const amountKobo = Math.round(amount * 100);
+    console.log("callbackUrl", callbackUrl);
 
     // Create a pending transaction record
     await this.dataSource.getRepository(Transaction).save({

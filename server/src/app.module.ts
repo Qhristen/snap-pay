@@ -26,7 +26,6 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { redisStore } from "cache-manager-redis-yet";
 import { PaymentModule } from "./modules/payment/payment.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
-import { SecurityMiddleware } from "./common/middleware/security.middleware";
 
 @Module({
   imports: [
@@ -86,6 +85,6 @@ import { SecurityMiddleware } from "./common/middleware/security.middleware";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SecurityMiddleware).forRoutes("*");
+   
   }
 }

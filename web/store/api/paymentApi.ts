@@ -101,6 +101,7 @@ export const paymentApi = api.injectEndpoints({
         data,
       }),
       transformResponse: unwrap<InitializeFundingResponse>,
+       invalidatesTags: ["Transactions", "Wallet"],
     }),
     verifyFunding: builder.mutation<VerifyFundingResponse, { reference: string }>({
       query: (data) => ({

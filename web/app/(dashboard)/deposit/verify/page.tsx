@@ -54,8 +54,8 @@ export default function DepositVerifyPage() {
               <Loader2 className="w-20 h-20 text-primary animate-spin" />
             </div>
             <h1 className="text-2xl font-bold text-white">Verifying Payment</h1>
-            <p className="text-muted-foreground">{message}</p>
-            <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Ref: {reference}</p>
+            <p className="text-white/40">{message}</p>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Ref: {reference}</p>
           </>
         )}
 
@@ -65,7 +65,7 @@ export default function DepositVerifyPage() {
               <CheckCircle2 className="w-10 h-10 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-white">Payment Successful</h1>
-            <p className="text-muted-foreground">{message}</p>
+            <p className="text-white/40">{message}</p>
             <div className="pt-4">
               <Button 
                 onClick={() => router.push('/dashboard')}
@@ -83,7 +83,7 @@ export default function DepositVerifyPage() {
               <XCircle className="w-10 h-10 text-destructive" />
             </div>
             <h1 className="text-2xl font-bold text-white">Payment Failed</h1>
-            <p className="text-muted-foreground">{message}</p>
+            <p className="text-white/40">{message}</p>
             <div className="pt-4 flex flex-col gap-3">
               <Button 
                 onClick={() => router.push('/deposit')}
@@ -94,7 +94,7 @@ export default function DepositVerifyPage() {
               <Button 
                 variant="outline"
                 onClick={() => router.push('/dashboard')}
-                className="text-muted-foreground hover:text-white"
+                className="text-white/40 hover:text-white"
               >
                 Back to Dashboard
               </Button>
