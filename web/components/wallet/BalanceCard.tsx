@@ -7,7 +7,7 @@ import { formatCurrency } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function BalanceCard() {
+export function BalanceCard({ isLoadingWallet }: { isLoadingWallet: boolean }) {
   const [showBalance, setShowBalance] = useState(true);
   const balance = useAppSelector((state) => state.wallet.balance);
   const user = useAppSelector((state) => state.auth.user);
@@ -43,7 +43,14 @@ export function BalanceCard() {
                   exit={{ opacity: 0, y: -10 }}
                   className="font-mono text-4xl font-bold tracking-tight md:text-5xl text-white"
                 >
-                  {showBalance ? formatCurrency(balance) : '••••••••'}
+                  {isLoadingWallet ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      <span className="text-white/40 text-sm font-medium">Syncing your wallet...</span>
+                    </div>
+                  ) : (
+                    formatCurrency(balance)
+                  )}
                 </motion.h2>
               </AnimatePresence>
             </div>

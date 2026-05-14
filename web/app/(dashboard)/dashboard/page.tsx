@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const user = useAppSelector((state) => state.auth.user);
 
   // Fetch initial wallet balance
-  const { data: walletData } = useGetBalanceQuery();
+  const { data: walletData, isLoading: isLoadingWallet } = useGetBalanceQuery();
 
   // Logout
   const [logoutApi] = useLogoutMutation();
@@ -79,7 +79,7 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <BalanceCard />
+        <BalanceCard isLoadingWallet={isLoadingWallet} />
       </motion.div>
 
       {/* Quick Actions */}
