@@ -25,7 +25,7 @@ async function bootstrap() {
   const swaggerDoc = new DocumentBuilder()
     .setTitle("SnapPay API")
     .setDescription(
-      "SnapPay is a real-time digital wallet API built with NestJS that lets users store, move, and track money instantly",
+      "SnapPay is a real-time digital wallet API built with NestJS that lets users store, move, and track money instantly. It's a backend-first fintech platform designed for speed, security, and scalability.",
     )
     .setVersion("1.0")
     .addBearerAuth()

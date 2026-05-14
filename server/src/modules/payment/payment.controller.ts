@@ -19,7 +19,6 @@ import {
 } from "@nestjs/swagger";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { User } from "../users/entities/user.entity";
-import { TransactionType } from "../../common/enums/transaction.enum";
 import { PaystackService } from "./paystack.service";
 import { PaymentService } from "./payment.service";
 import { WalletService } from "../wallet/wallet.service";
@@ -32,7 +31,6 @@ import {
   BankAccountResponseDto,
 } from "./dto";
 import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
-import { TransactionsService } from "../transactions/transactions.service";
 
 @ApiTags("Payment")
 @Controller("payment")
@@ -40,14 +38,12 @@ import { TransactionsService } from "../transactions/transactions.service";
 @ApiBearerAuth()
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
-  private readonly HIGH_VALUE_THRESHOLD = 50000; // ₦50,000
-
+  
   constructor(
     private readonly paystackService: PaystackService,
     private readonly paymentService: PaymentService,
     private readonly walletService: WalletService,
-    private readonly transactionService: TransactionsService,
-  ) {}
+  ) { }
 
   @Get("banks")
   @ApiOperation({ summary: "List all Nigerian banks" })
@@ -178,34 +174,15 @@ export class PaymentController {
     @CurrentUser() user: User,
     @Body() dto: VerifyPaymentDto,
   ) {
-    const result = await this.paystackService.verifyTransaction(dto.reference);
-
-    if (result.status !== "success") {
-      throw new BadRequestException("Payment was not successful");
-    }
-
-    // Verify metadata
-    const metadata = result.metadata;
-    if (metadata?.userId !== user.id) {
-      throw new BadRequestException("Payment does not belong to this user");
-    }
-
-    // Credit wallet (amount is in kobo, convert to naira)
-    const amountInNaira = result.amount / 100;
-
-    const transaction = await this.walletService.getTransactionByReference(
-      dto.reference,
-    );
-
-    const { balance } = await this.walletService.getBalance(user.id);
+    const result = await this.paymentService.verifyFunding(user, dto.reference);
 
     return {
       success: true,
       data: {
-        transaction,
-        balance,
+        transaction: result.transaction,
+        balance: result.balance,
       },
-      message: `₦${amountInNaira.toLocaleString()} has been added to your wallet`,
+      message: `₦${result.amount.toLocaleString()} has been added to your wallet`,
     };
   }
 
@@ -220,36 +197,10 @@ export class PaymentController {
     @CurrentUser() user: User,
     @Body() dto: AddBankAccountDto,
   ) {
-    // Verify bank account with Paystack
-    const accountDetails = await this.paystackService.verifyBankAccount(
+    const bankAccount = await this.paymentService.addBankAccount(
+      user,
       dto.accountNumber,
       dto.bankCode,
-    );
-
-    // Get bank name from bank list
-    const banks = await this.paystackService.listBanks();
-    const bank = banks.find((b) => b.code === dto.bankCode);
-
-    // Create transfer recipient for future withdrawals
-    const recipientCode = await this.paystackService.createTransferRecipient(
-      dto.accountNumber,
-      dto.bankCode,
-      accountDetails.account_name,
-    );
-
-    // Update wallet with bank details (saves to BankAccount entity)
-    const bankAccount = await this.walletService.updateBankAccount(
-      user.id,
-      dto.accountNumber,
-      dto.bankCode,
-      bank?.name || "Unknown Bank",
-      accountDetails.account_name,
-    );
-
-    // Store recipient code
-    await this.walletService.updatePaystackRecipientCode(
-      user.id,
-      recipientCode,
     );
 
     return {
@@ -315,44 +266,20 @@ export class PaymentController {
     @CurrentUser() user: User,
     @Body() dto: InitiateWithdrawalDto,
   ) {
-    // Get wallet and verify balance
-    const wallet = await this.walletService.getWallet(user.id);
 
-    if (wallet.availableBalance < dto.amount) {
-      throw new BadRequestException("Insufficient balance");
-    }
 
-    if (!wallet.bankAccount || !wallet.bankAccount.paystackRecipientCode) {
-      throw new BadRequestException(
-        "Please add a bank account before withdrawing",
-      );
-    }
-
-    // High-value threshold check (can be expanded later)
-    if (dto.amount >= this.HIGH_VALUE_THRESHOLD) {
-      this.logger.warn(
-        `High value withdrawal requested by user ${user.id}: ₦${dto.amount}`,
-      );
-    }
-
-    const reference = this.paystackService.generateReference("WD");
-
-    await this.paymentService.initiateWithdrawal(
+    const result = await this.paymentService.initiateWithdrawal(
       user,
       dto.amount,
-      wallet.bankAccount.paystackRecipientCode,
-      reference,
     );
-
-    const { balance } = await this.walletService.getBalance(user.id);
 
     return {
       success: true,
       data: {
-        reference,
-        amount: dto.amount,
+        reference: result.reference,
+        amount: result.amount,
         status: "pending",
-        balance,
+        balance: result.balance,
       },
       message:
         "Withdrawal initiated successfully. You will receive the funds shortly.",
