@@ -7,11 +7,15 @@ import {
   Logger,
   Post,
   UnauthorizedException,
+  Req,
 } from "@nestjs/common";
+import type { RawBodyRequest } from "@nestjs/common";
+import type { Request } from "express";
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
 import { PaystackService } from "./paystack.service";
+import { Public } from "../../common/decorators/public.decorator";
 
 interface PaystackWebhookEvent {
   event: string;
@@ -37,6 +41,7 @@ export class WebhookController {
     @InjectQueue("webhooks") private readonly webhookQueue: Queue,
   ) { }
 
+  @Public()
   @Post("paystack")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -58,11 +63,16 @@ export class WebhookController {
   async handlePaystackWebhook(
     @Body() body: PaystackWebhookEvent,
     @Headers("x-paystack-signature") signature: string,
+    @Req() req: RawBodyRequest<Request>,
   ) {
     // 1. Verify webhook signature before sending to queue
-    const rawBody = JSON.stringify(body);
+    // We MUST use req.rawBody to accurately verify the HMAC signature.
+    // If the body is completely empty, default to an empty string to prevent crypto crashes.
+    const rawBody = req.rawBody ? req.rawBody.toString() : (body ? JSON.stringify(body) : "");
+    
     console.log(rawBody, "rawBody")
     console.log(signature, "signature")
+
     if (!this.paystackService.verifyWebhookSignature(rawBody, signature)) {
       this.logger.warn("Invalid Paystack webhook signature");
       throw new UnauthorizedException("Invalid signature");
