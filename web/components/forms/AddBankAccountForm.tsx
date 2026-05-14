@@ -58,7 +58,8 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
             accountNumber, 
             bankCode: selectedBankCode 
           }).unwrap();
-          setAccountName(result.accountName);
+          console.log(result.data, "result.data");
+          setAccountName(result.data.accountName);
         } catch (error) {
           setAccountName(null);
           toast.error('Could not verify bank account');
@@ -79,12 +80,14 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
       toast.error('Please verify your account details first');
       return;
     }
+    console.log(accountName, "accountName");
+    console.log(data, "data");
 
     try {
       await linkAccount({
         bankCode: data.bankCode,
         accountNumber: data.accountNumber,
-        accountName: accountName,
+        accountName: accountName ?? "",
       }).unwrap();
       
       toast.success('Bank account linked successfully');

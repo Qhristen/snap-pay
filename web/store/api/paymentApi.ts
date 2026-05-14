@@ -11,8 +11,12 @@ export interface VerifyAccountRequest {
 }
 
 export interface VerifyAccountResponse {
+ data:{
   accountName: string;
   accountNumber: string;
+  bankCode: string;
+  bankName?: string;
+ }
 }
 
 export interface InitializeFundingRequest {

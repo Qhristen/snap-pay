@@ -36,7 +36,7 @@ export function TransactionCard({ transaction, index }: TransactionCardProps) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="flex items-center justify-between p-6 transition-all hover:bg-white/[0.02] group"
+      className="flex items-center justify-between cursor-pointer p-6 transition-all hover:bg-white/[0.02] group"
     >
       <div className="flex items-center gap-5">
         <div className={cn(

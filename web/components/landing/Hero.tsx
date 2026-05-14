@@ -9,7 +9,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden pt-32 pb-20 md:pt-38 md:pb-32">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]" />
+      <div className="absolute top-1/2 left-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/10 blur-[120px]" />
       
       <div className="mx-auto max-w-7xl px-6 lg:grid lg:grid-cols-2 lg:gap-12 items-center">
         <div className="max-w-2xl text-center lg:text-left">
@@ -89,15 +89,15 @@ export function Hero() {
                      <div className="space-y-3">
                        <div className="flex items-center gap-2 text-muted-foreground">
                          <p className="text-xs font-bold uppercase tracking-widest">Available Balance</p>
-                         <div className="rounded-full bg-white/5 p-1.5">
+                         <div className="bg-white/5 p-1.5">
                            <EyeOff size={14} />
                          </div>
                        </div>
                        <h2 className="font-mono text-4xl font-bold tracking-tight text-white">₦ 248,500.00</h2>
                      </div>
 
-                     <div className="hidden sm:flex items-center gap-2 rounded-2xl bg-primary/10 px-4 py-2 border border-primary/20 backdrop-blur-sm">
-                       <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                     <div className="hidden sm:flex items-center gap-2 bg-primary/10 px-4 py-2 border border-primary/20 backdrop-blur-sm">
+                       <div className="h-2 w-2 bg-primary animate-pulse" />
                        <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">Live Status</span>
                      </div>
                    </div>
@@ -111,7 +111,7 @@ export function Hero() {
                      <div className="flex items-center gap-4">
                         <div className="flex -space-x-2">
                            {[1, 2, 3].map(i => (
-                             <div key={i} className="h-8 w-8 rounded-full border-2 border-surface bg-muted flex items-center justify-center text-[10px] font-bold">
+                             <div key={i} className="h-8 w-8 border-2 border-surface bg-muted flex items-center justify-center text-[10px] font-bold">
                                 {i === 3 ? '+' : ''}
                              </div>
                            ))}
@@ -148,7 +148,7 @@ export function Hero() {
           </motion.div>
           
           {/* Back Glow behind mockup */}
-          <div className="absolute top-1/2 left-1/2 -z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-[100px]" />
+          <div className="absolute top-1/2 left-1/2 -z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-primary/20 blur-[100px]" />
         </motion.div>
       </div>
     </section>
