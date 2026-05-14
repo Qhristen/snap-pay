@@ -118,8 +118,8 @@ export function AddBankAccountForm({ onSuccess, onCancel }: AddBankAccountFormPr
           </div>
 
           {isDropdownOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-[#0A0A0A] border border-border shadow-2xl max-h-60 overflow-y-auto">
-              <div className="p-2 sticky top-0 bg-[#0A0A0A] border-b border-border">
+            <div className="absolute z-50 w-full mt-1 bg-popover border border-border shadow-2xl max-h-60 overflow-y-auto">
+              <div className="p-2 sticky top-0 bg-popover border-b border-border">
                 <input
                   type="text"
                   placeholder="Search banks..."

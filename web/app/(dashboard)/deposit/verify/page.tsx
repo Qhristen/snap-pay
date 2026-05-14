@@ -46,7 +46,7 @@ export default function DepositVerifyPage() {
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md bg-[#0A0A0A] border border-border p-8 text-center space-y-6">
+      <div className="w-full max-w-md bg-surface border border-border p-8 text-center space-y-6">
         {status === 'verifying' && (
           <>
             <div className="relative w-20 h-20 mx-auto">
