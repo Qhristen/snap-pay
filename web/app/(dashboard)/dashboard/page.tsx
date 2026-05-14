@@ -1,21 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { useAppSelector } from '@/hooks/useAppSelector';
-import { setBalance } from '@/store/slices/walletSlice';
 import { BalanceCard } from '@/components/wallet/BalanceCard';
 import { QuickActions } from '@/components/wallet/QuickActions';
-import { useGetBalanceQuery } from '@/store/api/walletApi';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
 import { useGetTransactionsQuery } from '@/store/api/transactionApi';
+import { useGetBalanceQuery } from '@/store/api/walletApi';
+import { setBalance } from '@/store/slices/walletSlice';
+import { useEffect } from 'react';
 
-import { formatCurrency, cn } from '@/lib/utils';
-import { ArrowDownLeft, ArrowUpRight, Send, History, Search, Filter, ChevronRight, LogOut, Icon, LayoutDashboard, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useLogoutMutation } from '@/store/api/authApi';
 import { NotificationBell } from '@/components/layout/NotificationBell';
 import { TransactionCard } from '@/components/wallet/TransactionCard';
+import { useLogoutMutation } from '@/store/api/authApi';
+import { motion } from 'framer-motion';
+import { ChevronRight, History, LogOut, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();

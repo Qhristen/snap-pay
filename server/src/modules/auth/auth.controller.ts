@@ -6,6 +6,7 @@ import {
   Post,
   Req,
 } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import type { Request } from "express";
 import {
   ApiTags,
@@ -33,6 +34,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Throttle({ short: { limit: 1, ttl: 5000 }, medium: { limit: 5, ttl: 60000 } })
   @Post("register")
   @ApiOperation({
     summary: "Register a new user",
@@ -48,6 +50,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ short: { limit: 2, ttl: 5000 }, medium: { limit: 10, ttl: 60000 } })
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -65,6 +68,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ short: { limit: 1, ttl: 10000 }, medium: { limit: 3, ttl: 60000 } })
   @Post("forgot-password")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Request password reset" })

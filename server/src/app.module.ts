@@ -2,6 +2,8 @@ import {
   ClassSerializerInterceptor,
   Module,
   ValidationPipe,
+  NestModule,
+  MiddlewareConsumer,
 } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -24,6 +26,7 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { redisStore } from "cache-manager-redis-yet";
 import { PaymentModule } from "./modules/payment/payment.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
+import { SecurityMiddleware } from "./common/middleware/security.middleware";
 
 @Module({
   imports: [
@@ -32,7 +35,11 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
       useFactory: (config: ConfigService) => config.get("database")!,
       inject: [ConfigService],
     }),
-    ThrottlerModule.forRoot([{ name: "global", ttl: 60000, limit: 100 }]),
+    ThrottlerModule.forRoot([
+      { name: "short", ttl: 1000, limit: 3 },
+      { name: "medium", ttl: 10000, limit: 20 },
+      { name: "long", ttl: 60000, limit: 100 },
+    ]),
     BullModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
         connection: {
@@ -77,4 +84,8 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SecurityMiddleware).forRoutes("*");
+  }
+}

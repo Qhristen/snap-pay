@@ -12,6 +12,9 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
 
+  // Trust proxy for rate limiting (important for deployment behind Nginx/Vercel)
+  app.set('trust proxy', 1);
+
   app.enableCors({
     origin: config.get("corsOrigins"),
     credentials: true,
@@ -19,7 +22,20 @@ async function bootstrap() {
 
   app.setGlobalPrefix("api/v1");
 
-  app.use(helmet());
+  // Explicit helmet configuration for API security
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https:", "wss:"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }));
 
 
   const swaggerDoc = new DocumentBuilder()
