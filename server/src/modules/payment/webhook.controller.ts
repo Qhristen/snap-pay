@@ -35,7 +35,7 @@ export class WebhookController {
   constructor(
     private readonly paystackService: PaystackService,
     @InjectQueue("webhooks") private readonly webhookQueue: Queue,
-  ) {}
+  ) { }
 
   @Post("paystack")
   @HttpCode(HttpStatus.OK)
@@ -61,6 +61,8 @@ export class WebhookController {
   ) {
     // 1. Verify webhook signature before sending to queue
     const rawBody = JSON.stringify(body);
+    console.log(rawBody, "rawBody")
+    console.log(signature, "signature")
     if (!this.paystackService.verifyWebhookSignature(rawBody, signature)) {
       this.logger.warn("Invalid Paystack webhook signature");
       throw new UnauthorizedException("Invalid signature");

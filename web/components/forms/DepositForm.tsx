@@ -36,15 +36,15 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
   const onSubmit = async (data: DepositValues) => {
     try {
       const callbackUrl = `${window.location.origin}/deposit/verify`;
-      
-      const result = await initializeFunding({ 
+
+      const result = await initializeFunding({
         amount: Number(data.amount),
-        callbackUrl 
+        callbackUrl
       }).unwrap();
 
       if (result.data?.authorizationUrl) {
-        toast.success('Redirecting to Paystack...');
-        window.location.href = result.data.authorizationUrl;
+        toast.success('Opening Paystack in a new tab...');
+        window.open(result.data.authorizationUrl, '_blank');
       } else {
         toast.error('Could not initialize payment. Please try again.');
       }
@@ -55,14 +55,14 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
 
   return (
     <div className="space-y-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Input
           label="Amount to Deposit (NGN)"
           placeholder="5000"
           error={errors.amount?.message}
           {...register('amount')}
         />
-        
+
         <div className="grid grid-cols-3 gap-2">
           {[1000, 5000, 10000].map((preset) => (
             <button
@@ -76,9 +76,9 @@ export function DepositForm({ onSuccess }: DepositFormProps) {
           ))}
         </div>
 
-        <Button 
-          type="submit" 
-          className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow" 
+        <Button
+          type="submit"
+          className="w-full h-14 bg-primary text-lg font-bold text-background hover:bg-gold-glow"
           isLoading={isLoading}
         >
           Proceed to Payment
