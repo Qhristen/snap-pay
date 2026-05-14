@@ -1,8 +1,8 @@
 # 💳 SnapPay: Real-Time Digital Wallet & Payments
 
-SnapPay is a premium, real-time digital wallet platform designed for speed, security, and scalability. It provides a complete backend-first fintech solution that lets users store, move, and track money instantly across a high-performance ecosystem.
+SnapPay is a premium, real-time digital wallet platform designed for speed, security, and scalability. It provides a complete backend-first fintech solution that lets users deposit, transact, and reconcile money instantly across a high-performance ecosystem.
 
-Built with a modern, modular architecture, SnapPay enables seamless financial interactions with a "user-first" experience—ensuring every transaction is reflected in real-time without the need for manual refreshes.
+Built with a modern, modular architecture, SnapPay enables seamless financial interactions with a "user-first" experience—ensuring every transaction is reflected in real-time.
 
 ---
 - **Frontend (Live)**: [https://snap-pay-ashy.vercel.app](https://snap-pay-ashy.vercel.app)
