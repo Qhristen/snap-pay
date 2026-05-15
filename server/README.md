@@ -117,6 +117,15 @@ SnapPay includes a robust suite of unit tests for core modules to ensure financi
   npx jest src/modules/payment/payment.service.spec.ts
   ```
 
+## 📋 TODO & Roadmap
+
+The following tasks are planned to improve the API's features, security, and scalability:
+
+- [ ] **Email Provider Integration**: Replace console logs/mock queues with a real email service provider (e.g., SendGrid, Resend, or AWS SES) for the `mail-processing` queue (Welcome emails, OTP, Password Reset).
+- [ ] **Two-Factor Authentication (2FA)**: Add TOTP-based 2FA (e.g., Google Authenticator) for enhanced user account security.
+- [ ] **KYC & Identity Verification**: Implement an identity verification flow (Tier 1, Tier 2 limits) using a third-party service to increase deposit and withdrawal limits safely.
+- [ ] **Admin Dashboard API**: Create roles (Admin, SuperAdmin) and build endpoints for system overview, user management, and transaction overrides.
+
 ## 📄 License
 
 This project is licensed under the MIT License.

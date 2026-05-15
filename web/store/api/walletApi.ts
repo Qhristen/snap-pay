@@ -43,6 +43,16 @@ export const walletApi = api.injectEndpoints({
       invalidatesTags: ["Wallet", "Transactions"],
     }),
 
+    walletWithdraw: builder.mutation<{ balance: number, transaction: any }, { amount: number }>({
+      query: (data) => ({
+        url: "/api/v1/wallet/withdraw",
+        method: "POST",
+        data,
+      }),
+      transformResponse: (response: any) => response?.data ?? response,
+      invalidatesTags: ["Wallet", "Transactions", "AuditLogs"],
+    }),
+
   }),
   overrideExisting: true,
 });
@@ -50,5 +60,6 @@ export const walletApi = api.injectEndpoints({
 export const { 
   useGetBalanceQuery, 
   useTransferMutation, 
+  useWalletWithdrawMutation,
 } = walletApi;
 

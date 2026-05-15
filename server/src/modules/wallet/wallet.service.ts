@@ -138,7 +138,7 @@ export class WalletService {
         reference: this.generateReference("WTH"),
         amount: amountKobo.toNumber(),
         description: "Withdrawal from wallet",
-        status: TransactionStatus.PENDING,
+        status: TransactionStatus.SUCCESSFUL,
         type: TransactionType.WITHDRAWAL,
       });
       await queryRunner.manager.save(transaction);
@@ -455,6 +455,22 @@ export class WalletService {
     await queryRunner.startTransaction();
 
     try {
+      let transaction = await queryRunner.manager.findOne(Transaction, {
+        where: { reference },
+        lock: { mode: "pessimistic_write" },
+      });
+
+      if (!transaction) {
+        this.logger.error(`Transaction not found for reference: ${reference}`);
+        throw new NotFoundException(`Transaction not found for reference: ${reference}`);
+      }
+
+      if (transaction.status === TransactionStatus.SUCCESSFUL) {
+        this.logger.log(`Transaction ${reference} is already successful, skipping credit`);
+        await queryRunner.commitTransaction();
+        return transaction;
+      }
+
       const wallet = await queryRunner.manager.findOne(Wallet, {
         where: { userId },
         lock: { mode: "pessimistic_write" },
@@ -469,15 +485,6 @@ export class WalletService {
 
       this.logger.log(`Updated wallet balance for user ${userId}: ${oldBalance} -> ${wallet.balance}`);
 
-      let transaction = await queryRunner.manager.findOne(Transaction, {
-        where: { reference },
-      });
-
-      if (!transaction) {
-        this.logger.error(`Transaction not found for reference: ${reference}`);
-        throw new NotFoundException(`Transaction not found for reference: ${reference}`);
-      }
-      
       transaction.status = TransactionStatus.SUCCESSFUL;
       await queryRunner.manager.save(transaction);
       this.logger.log(`Marked transaction ${reference} as SUCCESSFUL`);
