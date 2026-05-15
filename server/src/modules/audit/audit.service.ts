@@ -49,7 +49,17 @@ export class AuditService {
       .where("user.id = :userId", { userId: user.id });
 
     if (action && action !== AuditActionFilter.ALL) {
-      queryBuilder.andWhere("audit.action = :action", { action });
+      if (action === AuditActionFilter.WITHDRAWAL) {
+        queryBuilder.andWhere("audit.action LIKE :action", { action: 'WITHDRAWAL%' });
+      } else if (action === AuditActionFilter.TRANSFER) {
+        queryBuilder.andWhere("audit.action LIKE :action", { action: 'TRANSFER%' });
+      } else if (action === AuditActionFilter.PROFILE_UPDATE) {
+        queryBuilder.andWhere("audit.action IN (:...actions)", { actions: ['PROFILE_UPDATE', 'UPDATE_PROFILE'] });
+      } else if (action === AuditActionFilter.PASSWORD_CHANGE) {
+        queryBuilder.andWhere("audit.action IN (:...actions)", { actions: ['PASSWORD_CHANGE', 'PASSWORD_RESET'] });
+      } else {
+        queryBuilder.andWhere("audit.action = :action", { action });
+      }
     }
 
     if (entity) {

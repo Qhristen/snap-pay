@@ -242,6 +242,7 @@ export class AuthService {
 
   async logout(userId: string) {
     await this.cacheManager.del(`refresh_token:${userId}`);
+    await this.auditService.log({ id: userId } as User, "LOGOUT", "User", userId);
   }
 
   private async generateTokens(user: User) {

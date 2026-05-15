@@ -493,6 +493,14 @@ export class WalletService {
         currency: wallet.currency,
       });
 
+      await this.auditService.log(
+        { id: userId } as User,
+        "DEPOSIT",
+        "Wallet",
+        wallet.id,
+        { balance: balanceNaira, reference }
+      );
+
       return transaction;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -550,6 +558,14 @@ export class WalletService {
         currency: wallet.currency,
       });
 
+      await this.auditService.log(
+        { id: userId } as User,
+        type === TransactionType.WITHDRAWAL ? "WITHDRAWAL_INITIATED" : "WALLET_DEBIT",
+        "Wallet",
+        wallet.id,
+        { balance: balanceNaira, reference, type }
+      );
+
       return transaction;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -567,6 +583,18 @@ export class WalletService {
 
     transaction.status = TransactionStatus.SUCCESSFUL;
     await this.dataSource.getRepository(Transaction).save(transaction);
+
+    const wallet = await this.dataSource.getRepository(Wallet).findOneBy({ userId: transaction.userId });
+    if (wallet) {
+      const balanceNaira = new Decimal(wallet.balance).dividedBy(100).toFixed(2);
+      await this.auditService.log(
+        { id: transaction.userId } as User,
+        "WITHDRAWAL_COMPLETED",
+        "Wallet",
+        wallet.id,
+        { balance: balanceNaira, reference }
+      );
+    }
   }
 
   async reverseWithdrawal(reference: string) {
@@ -610,6 +638,14 @@ export class WalletService {
         balance: balanceNaira,
         currency: wallet.currency,
       });
+
+      await this.auditService.log(
+        { id: transaction.userId } as User,
+        "WITHDRAWAL_REVERSED",
+        "Wallet",
+        wallet.id,
+        { balance: balanceNaira, reference }
+      );
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
