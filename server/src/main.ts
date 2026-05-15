@@ -4,6 +4,8 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
 import { AppModule } from "./app.module";
+import { XssValidationPipe } from "./common/pipes/xss-validation.pipe";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -19,6 +21,17 @@ async function bootstrap() {
     origin: config.get("corsOrigins"),
     credentials: true,
   });
+
+   // Global Validation Pipe
+  app.useGlobalPipes(
+    new XssValidationPipe(),
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
 
   app.setGlobalPrefix("api/v1");
 
