@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   History,
   LogOut,
-  Bell
+  Bell,
+  Shield
 } from 'lucide-react';
 
 export function MobileNav() {
@@ -78,7 +79,7 @@ export function MobileNav() {
           <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">Alerts</span>
         </button>
 
-        <Link
+        {/* <Link
           href="/transactions"
           className={cn(
             'flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group',
@@ -95,6 +96,25 @@ export function MobileNav() {
             <History size={22} />
           </div>
           <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">History</span>
+        </Link> */}
+
+        <Link
+          href="/audit-logs"
+          className={cn(
+            'flex flex-col items-center justify-center gap-1.5 transition-all w-full h-full relative group',
+            pathname === '/audit-logs' ? 'text-primary' : 'text-foreground/40 hover:text-foreground'
+          )}
+        >
+          {pathname === '/audit-logs' && (
+            <div className="absolute top-0 h-1 w-8 bg-primary shadow-[0_4px_12px_rgba(245,166,35,0.3)]" />
+          )}
+          <div className={cn(
+            "p-2 transition-all",
+            pathname === '/audit-logs' ? "bg-primary/10" : "group-hover:bg-foreground/5"
+          )}>
+            <Shield size={22} />
+          </div>
+          <span className="text-[9px] font-bold uppercase text-foreground/40 tracking-tighter">Audit</span>
         </Link>
 
         {/* Logout button */}

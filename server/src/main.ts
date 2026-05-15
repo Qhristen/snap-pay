@@ -49,6 +49,7 @@ async function bootstrap() {
     .addTag("Users")
     .addTag("Wallet")
     .addTag("Transactions")
+    .addTag("Audit")
     .build();
   SwaggerModule.setup(
     "docs",

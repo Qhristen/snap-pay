@@ -11,11 +11,10 @@ import { useEffect } from 'react';
 
 import { NotificationBell } from '@/components/layout/NotificationBell';
 import { TransactionCard } from '@/components/wallet/TransactionCard';
-import { useLogoutMutation } from '@/store/api/authApi';
 import { motion } from 'framer-motion';
-import { ChevronRight, History, LogOut, Zap } from 'lucide-react';
+import { ChevronRight, History, Zap } from 'lucide-react';
 import Link from 'next/link';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { UserDropdown } from '@/components/layout/UserDropdown';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
@@ -23,9 +22,6 @@ export default function DashboardPage() {
 
   // Fetch initial wallet balance
   const { data: walletData, isLoading: isLoadingWallet } = useGetBalanceQuery();
-
-  // Logout
-  const [logoutApi] = useLogoutMutation();
 
 
   // Fetch recent transactions
@@ -37,16 +33,6 @@ export default function DashboardPage() {
       dispatch(setBalance(walletData.balance));
     }
   }, [walletData, dispatch]);
-
-
-  const handleLogout = async () => {
-    try {
-      await logoutApi().unwrap();
-    } catch {
-      // onQueryStarted in authApi already clears state and storage
-    }
-    window.location.href = '/login';
-  };
 
   return (
     <div className="space-y-10 pb-10 max-w-6xl mx-auto">
@@ -63,11 +49,8 @@ export default function DashboardPage() {
           <span className="font-sora text-2xl font-bold tracking-tighter">SnapPay</span>
         </Link>
         <div className="flex items-center gap-3">
-          <ThemeToggle />
           <NotificationBell />
-          <button onClick={handleLogout} className="h-10 w-10 cursor-pointer flex items-center justify-center bg-surface border border-border text-foreground/40 hover:text-foreground transition-colors">
-            <LogOut size={18} />
-          </button>
+          <UserDropdown />
         </div>
       </header>
 
