@@ -93,7 +93,7 @@ export function Hero() {
                            <EyeOff size={14} />
                          </div>
                        </div>
-                       <h2 className="font-mono text-4xl font-bold tracking-tight text-foreground">₦ 248,500.00</h2>
+                       <h2 className="font-mono text-2xl lg:text-4xl font-bold tracking-tight text-foreground">₦ 248,500.00</h2>
                      </div>
 
                      <div className="hidden sm:flex items-center gap-2 bg-primary/10 px-4 py-2 border border-primary/20 backdrop-blur-sm">
@@ -104,11 +104,11 @@ export function Hero() {
 
                    <div className="mt-10 flex items-end justify-between gap-6">
                      <div className="space-y-1">
-                       <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Account Holder</p>
-                       <p className="text-base font-bold text-foreground tracking-tight">John Doe</p>
+                       <p className="text-xs md:text-sm font-bold text-foreground/40 uppercase tracking-widest">Account Holder</p>
+                       <p className="text-xs lg:text-base font-bold text-foreground tracking-tight">John Doe</p>
                      </div>
                      
-                     <div className="flex items-center gap-4">
+                     <div className="items-center gap-4 hidden lg:flex">
                         <div className="flex -space-x-2">
                            {[1, 2, 3].map(i => (
                              <div key={i} className="h-8 w-8 border-2 border-surface bg-muted flex items-center justify-center text-[10px] font-bold">
@@ -116,8 +116,8 @@ export function Hero() {
                              </div>
                            ))}
                         </div>
-                        <div className="h-8 w-px bg-foreground/10" />
-                        <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                        <div className="h-8 w-px bg-foreground/10 hidden lg:block" />
+                        <div className="flex items-center gap-2 text-primary font-bold text-xs lg:text-sm">
                            <TrendingUp size={16} />
                            <span>Premium</span>
                         </div>
@@ -138,7 +138,7 @@ export function Hero() {
                      key={action.label}
                      className="flex flex-col items-center gap-3 p-4 border border-border bg-surface transition-all hover:border-primary/20 cursor-pointer"
                    >
-                     <div className={`flex h-12 w-12 items-center justify-center ${action.bg} border border-border`}>
+                     <div className={`flex h-8 w-8 lg:h-12 lg:w-12 items-center justify-center ${action.bg} border border-border`}>
                        <action.icon className={`h-5 w-5 ${action.color}`} />
                      </div>
                      <span className="text-[10px] sm:text-xs font-bold text-foreground/40 tracking-tight uppercase">{action.label}</span>
